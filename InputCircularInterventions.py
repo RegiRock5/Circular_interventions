@@ -4,9 +4,9 @@ from mario import slicer, parse_exiobase_3
 # %%
 Material = "Steel"  # change to focus on material of interest
 Resource = "Iron ores"
-regionlock = False
-regionlock2 = False
-sectorlock = False
+regionlock = False #nl and rest of the world
+regionlock2 = False # bigger regions in the world
+sectorlock = False # arbitary sector combinations
 #%%
 iot_path = r"C:/Industrial_ecology/Thesis/IOT_2021_ixi"
 save_path = r'C:/Industrial_ecology/Thesis/Circularinterventions/Code'
@@ -55,26 +55,50 @@ new_units= world_IOT.units['Satellite account']
 print(new_units)
 #
 
+
+
 #%%CO2 - combustion - air
-world_IOT.plot_matrix(matrix = "F", 
-                      x = "Region_to",
-                      color = "Sector_to",
-                      filters_Satellite_account = ["CO2 - combustion - air"],
-                      base_scenario='baseline', # printing the delta_x with respect to baseline scenario,
-                      path = "Co2test.html")
+# world_IOT.plot_matrix(matrix = "X", 
+#                       x = "Region_to",
+#                       color = "Sector_to",
+#                       #filters_Satellite_account = ["CO2 - combustion - air"],
+#                       base_scenario='baseline', # printing the delta_x with respect to baseline scenario,
+#                       path = "Co2test.html")
 
 #%%
 if sectorlock == True: 
     world_IOT.aggregate(r'sector.xlsx', ignore_nan= True, levels = "Sector")
     world_IOT.get_index("Sector")
 
+#%%
+
 #The plot_matrix function can be used to plot the changes of the X
-world_IOT.plot_matrix(
-    matrix='X', # plotting the X matrix
-    x='Region_from', # putting the origin regions on the X axis
-    color='Sector_from', # colors are defined tby the origin sectors
-    base_scenario='baseline', # printing the delta_x with respect to baseline scenario,
-    path = 'delta_X1.html'
-                )
+# world_IOT.plot_matrix(
+#     matrix='F', # plotting the X matrix
+#     x='Region_from', # putting the origin regions on the X axis
+#     color='Sector_from', # colors are defined tby the origin sectors
+#     base_scenario='baseline', # printing the delta_x with respect to baseline scenario,
+#     path = 'delta_X1.html'
+#                 )
+
+#%%
+# world_IOT.plot_matrix(
+#     matrix = 'Y',
+#     x = 'Region_from',
+#     color = 'Region_to',
+#     path= 'final_comnsumtpiton_by_region.html'
+#     )
 
 
+#%%
+print(world_IOT['shock 1']['Z'])
+
+New_Z = world_IOT['shock 1']['Z']
+
+#%%
+print(world_IOT['shock 1']['X'])
+
+#%%
+New_A = world_IOT['shock 1']['z']
+#%%
+New_Z.to_csv('newZ.csv', index=False)  
