@@ -2,11 +2,11 @@ import mario
 from mario import slicer, parse_exiobase_3
 
 # %%
-Material = "Steel"  # change to focus on material of interest
-Resource = "Iron ores"
 regionlock = False #nl and rest of the world
 regionlock2 = False # bigger regions in the world
 sectorlock = False # arbitary sector combinations
+outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/outputdata/" 
+
 #%%
 iot_path = r"C:/Industrial_ecology/Thesis/IOT_2021_ixi"
 save_path = r'C:/Industrial_ecology/Thesis/Circularinterventions/Code'
@@ -100,5 +100,10 @@ print(world_IOT['shock 1']['X'])
 
 #%%
 New_A = world_IOT['shock 1']['z']
+New_A2 = world_IOT['shock 2']['z']
+New_Y = world_IOT['shock 2']["Y"]
+
 #%%
-New_Z.to_csv('newZ.csv', index=False)  
+New_A.to_csv(f'{outputpath}newA.csv', index=False)  
+New_A2.to_csv(f'{outputpath}NewA2.csv', index = False) 
+New_Y.to_csv(f'{outputpath}NewY.csv', index =False)
