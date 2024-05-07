@@ -52,62 +52,62 @@ A = input_output_matrix @ np.linalg.inv(np.diag(gross_output))
     
 
 #%%
-input_output_matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-row_totals = [8, 17, 26]
-column_totals = [11, 14, 13]
-gross_output = [15, 20, 30]
-max_iterations=200
+# input_output_matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+# row_totals = [8, 17, 26]
+# column_totals = [11, 14, 13]
+# gross_output = [15, 20, 30]
+# max_iterations=200
 
-tolerance=0.005
-# Ensure input matrices are numpy arrays
-input_output_matrix = np.array(input_output_matrix)
-row_totals = np.array(row_totals)
-column_totals = np.array(column_totals)
+# tolerance=0.005
+# # Ensure input matrices are numpy arrays
+# input_output_matrix = np.array(input_output_matrix)
+# row_totals = np.array(row_totals)
+# column_totals = np.array(column_totals)
 
-# Get the dimensions of the input-output matrix
-num_rows, num_cols = input_output_matrix.shape
+# # Get the dimensions of the input-output matrix
+# num_rows, num_cols = input_output_matrix.shape
 
-# Initialize scaling factors
-row_scaling = np.ones(num_rows)
-column_scaling = np.ones(num_cols)
+# # Initialize scaling factors
+# row_scaling = np.ones(num_rows)
+# column_scaling = np.ones(num_cols)
 
-# Initialize iteration counter
-iteration = 0
+# # Initialize iteration counter
+# iteration = 0
 
-# Iterate until convergence or maximum iterations reached
-while iteration < max_iterations:
-    # Step 1: Row Adjustment
-    row_adjusted_matrix = (input_output_matrix.T / (column_scaling + np.finfo(float).eps)).T
-    row_adjusted_matrix *= row_scaling[:, np.newaxis]
+# # Iterate until convergence or maximum iterations reached
+# while iteration < max_iterations:
+#     # Step 1: Row Adjustment
+#     row_adjusted_matrix = (input_output_matrix.T / (column_scaling + np.finfo(float).eps)).T
+#     row_adjusted_matrix *= row_scaling[:, np.newaxis]
     
-    # Step 2: Column Adjustment
-    column_totals_adjusted = row_adjusted_matrix.sum(axis=0)
-    column_scaling = column_totals / (column_totals_adjusted + np.finfo(float).eps)
+#     # Step 2: Column Adjustment
+#     column_totals_adjusted = row_adjusted_matrix.sum(axis=0)
+#     column_scaling = column_totals / (column_totals_adjusted + np.finfo(float).eps)
     
-    # Step 3: Scaling
-    row_totals_adjusted = row_adjusted_matrix.sum(axis=1)
-    row_scaling = row_totals / (row_totals_adjusted + np.finfo(float).eps)
+#     # Step 3: Scaling
+#     row_totals_adjusted = row_adjusted_matrix.sum(axis=1)
+#     row_scaling = row_totals / (row_totals_adjusted + np.finfo(float).eps)
     
     
-    # Calculate the difference between adjusted and original matrix
-    diff = np.abs((row_adjusted_matrix * column_scaling[:, np.newaxis]).sum(axis=1) - row_totals)
-    iteration += 1
+#     # Calculate the difference between adjusted and original matrix
+#     diff = np.abs((row_adjusted_matrix * column_scaling[:, np.newaxis]).sum(axis=1) - row_totals)
+#     iteration += 1
     
-    # Check for convergence
-    if np.all(diff < tolerance):
-        break
+#     # Check for convergence
+#     if np.all(diff < tolerance):
+#         break
     
-    # Increment iteration counter
+#     # Increment iteration counter
 
-# Return the adjusted matrix
-final_matrix =  row_adjusted_matrix * column_scaling
+# # Return the adjusted matrix
+# final_matrix =  row_adjusted_matrix * column_scaling
 
-final_matrix2 = (np.diag(column_scaling)) @ final_matrix @ (np.diag(row_scaling))
+# final_matrix2 = (np.diag(column_scaling)) @ final_matrix @ (np.diag(row_scaling))
 
-# Example usage:
-#print(final_matrix)
-print(final_matrix.sum(axis = 1))
-print(final_matrix.sum(axis = 0))
+# # Example usage:
+# #print(final_matrix)
+# print(final_matrix.sum(axis = 1))
+# print(final_matrix.sum(axis = 0))
 
 
 #%%
@@ -127,6 +127,11 @@ column_totals = np.array(column_totals)
 
 
 while iteration < max_iterations:
+    
+    # Column update
+    # col_scalars = input_output_matrix.sum(axis=0)/column_totals
+    # input_output_matrix = (input_output_matrix/col_scalars)
+    
     row_scalars = input_output_matrix.sum(axis=1)/row_totals
     input_output_matrix = (input_output_matrix.T/row_scalars).T
 
@@ -157,7 +162,7 @@ print(input_output_matrix)
 print(input_output_matrix.sum(axis = 1))
 print(input_output_matrix.sum(axis = 0))
 
-print(final_matrix2)
-print(final_matrix2.sum(axis = 1))
-print(final_matrix2.sum(axis = 0))
+# print(final_matrix2)
+# print(final_matrix2.sum(axis = 1))
+# print(final_matrix2.sum(axis = 0))
 
