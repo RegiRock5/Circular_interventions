@@ -111,10 +111,35 @@ A = input_output_matrix @ np.linalg.inv(np.diag(gross_output))
 
 
 #%%
-input_output_matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-row_totals = [8, 17, 26]
-column_totals = [11, 14, 13]
-gross_output = [15, 20, 30]
+# input_output_matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+# row_totals = [8, 17, 26]
+# column_totals = [11, 14, 13]
+# gross_output = [15, 20, 30]
+
+#%% Data import
+labels = pd.Index(["Agriculture", "Manufacturing", "Services"])
+input_output_matrix = pd.DataFrame([
+    [0.6,2.6,0.5],
+    [0.8, 30.6, 7.8],
+    [0.9,12.1,23]], index=labels, columns=labels)
+
+Y = np.array([1.9, 28.5, 47.8])
+V = np.array([3.30, 22.4, 52.5])
+Vstar = V * 1.2
+Y
+
+
+Z_sum = input_output_matrix.sum(axis=1) 
+x_out = Z_sum 
+
+#Row totals should be equal to sum of z rows
+row_totals = x_out 
+#The changed column totals reflect the sum of columns with total input (sum of z + V - the changed value added)
+column_totals = (input_output_matrix.sum(axis=0)) + V - Vstar 
+
+
+
+#%%
 
 max_iterations=200
 iteration = 0
@@ -159,10 +184,19 @@ final_matrix2 = (np.diag(col_scalars)) @ input_output_matrix @ (np.diag(row_scal
 
 
 print(input_output_matrix)
-print(input_output_matrix.sum(axis = 1))
-print(input_output_matrix.sum(axis = 0))
+print(input_output_matrix.sum(axis = 1)) # rows
+print(input_output_matrix.sum(axis = 0)) #columns
 
 # print(final_matrix2)
 # print(final_matrix2.sum(axis = 1))
 # print(final_matrix2.sum(axis = 0))
 
+#%%Calculate the gross output of the gross output and input 
+full_output = input_output_matrix.sum(axis = 0) + Y
+full_input = input_output_matrix.sum(axis = 1) + Vstar
+#%%
+resultsdf = pd.DataFrame()
+resultsdf["output"] = full_output
+resultsdf["input"] = full_input
+
+resultsdf.plot() # quick check of the difference between the output - input (should be equal)
