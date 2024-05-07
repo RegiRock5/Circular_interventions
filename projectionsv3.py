@@ -158,11 +158,13 @@ while iteration < max_iterations:
     # input_output_matrix = (input_output_matrix/col_scalars)
     
     row_scalars = input_output_matrix.sum(axis=1)/row_totals
-    input_output_matrix = (input_output_matrix.T/row_scalars).T
+    #input_output_matrix = (input_output_matrix.T/row_scalars).T
+    input_output_matrix = (input_output_matrix @ np.linalg.inv(np.diag(row_scalars)))
 
     # Column update
     col_scalars = input_output_matrix.sum(axis=0)/column_totals
-    input_output_matrix = (input_output_matrix/col_scalars)
+   # input_output_matrix = (input_output_matrix/col_scalars)
+    input_output_matrix = (input_output_matrix @ np.linalg.inv(np.diag(col_scalars)))
     
     # row_scalars = input_output_matrix.sum(axis=1)/row_totals
     # input_output_matrix = (input_output_matrix.T/row_scalars).T
