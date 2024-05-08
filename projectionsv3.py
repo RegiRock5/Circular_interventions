@@ -116,7 +116,7 @@ input_output_matrix = pd.DataFrame([
 
 Y = np.array([1.9, 28.5, 47.8])
 V = np.array([3.30, 22.4, 52.5])
-Vstar = V *  1.05**8
+Vstar = V *  1.05**8 
 Ystar = Y * 1.05**8
 
 
@@ -182,8 +182,8 @@ else:
 
 print(input_output_matrix)
 print(input_output_matrix.sum(axis = 1)) # rows
-print(input_output_matrix.sum(axis = 0)) #columns
 print(row_totals)
+print(input_output_matrix.sum(axis = 0)) #columns
 print(column_totals)
 
 #%%
@@ -194,9 +194,16 @@ print(column_totals)
 #%%Calculate the gross output of the gross output and input 
 full_output = input_output_matrix.sum(axis = 1) + Ystar
 full_input = input_output_matrix.sum(axis = 0) + Vstar
+delta_output = input_output_matrix.sum(axis = 1)
+delta_input = input_output_matrix.sum(axis = 0)
 #%%
 resultsdf = pd.DataFrame()
-resultsdf["output"] = full_output
-resultsdf["input"] = full_input
+# resultsdf["output"] = full_output
+# resultsdf["input"] = full_input
+resultsdf["base output"] = delta_output
+resultsdf["base input"] = delta_input
+resultsdf["original output"] = input_output_matrix.sum(axis=1) 
+resultsdf["original input"] = input_output_matrix.sum(axis=0) 
 
-resultsdf.plot() # quick check of the difference between the output - input (should be equal)
+
+resultsdf.plot(kind= 'bar') # quick check of the difference between the output - input (should be equal)
