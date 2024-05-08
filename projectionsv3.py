@@ -126,7 +126,7 @@ input_output_matrix = pd.DataFrame([
 Y = np.array([1.9, 28.5, 47.8])
 V = np.array([3.30, 22.4, 52.5])
 Vstar = V * 1.2
-Y
+Ystar = Y * 1.2
 
 
 Z_sum = input_output_matrix.sum(axis=1) 
@@ -137,13 +137,14 @@ row_totals = x_out
 #The changed column totals reflect the sum of columns with total input (sum of z + V - the changed value added)
 column_totals = (input_output_matrix.sum(axis=0)) + V - Vstar 
 
-
+#%%
+print(input_output_matrix.sum(0))
+print(column_totals)
 
 #%%
 
-max_iterations=200
 iteration = 0
-max_iterations=1000
+max_iterations=50
 tolerance=0.005
 
 input_output_matrix = np.array(input_output_matrix)
@@ -152,34 +153,44 @@ column_totals = np.array(column_totals)
 
 
 while iteration < max_iterations:
-    
-    # Column update
-    # col_scalars = input_output_matrix.sum(axis=0)/column_totals
-    # input_output_matrix = (input_output_matrix/col_scalars)
-    
+    print("Iteration:", iteration)
     row_scalars = input_output_matrix.sum(axis=1)/row_totals
     #input_output_matrix = (input_output_matrix.T/row_scalars).T
-    input_output_matrix = (input_output_matrix @ np.linalg.inv(np.diag(row_scalars)))
+    print("Row scalars:", row_scalars)
+    print("Column scalars:", col_scalars)
+    input_output_matrix = input_output_matrix @ (np.linalg.inv(np.diag(row_scalars)))   
 
     # Column update
     col_scalars = input_output_matrix.sum(axis=0)/column_totals
-   # input_output_matrix = (input_output_matrix/col_scalars)
-    input_output_matrix = (input_output_matrix @ np.linalg.inv(np.diag(col_scalars)))
+    print("Row scalars:", row_scalars)
+    print("Column scalars:", col_scalars)
+
+    #input_output_matrix = (input_output_matrix/col_scalars)
+    #input_output_matrix = input_output_matrix @ (np.linalg.inv(np.diag(row_scalars))) 
+    input_output_matrix = input_output_matrix @ (np.linalg.inv(np.diag(col_scalars)))
+    print("Row scalars:", row_scalars)
+    # print("Iteration:", iteration)
+    # print("Row scalars:", row_scalars)
+    # print("Column scalars:", col_scalars)
     
     # row_scalars = input_output_matrix.sum(axis=1)/row_totals
     # input_output_matrix = (input_output_matrix.T/row_scalars).T
     
     iteration += 1
     
-    diff = np.abs((input_output_matrix * row_scalars[:, np.newaxis]).sum(axis=0) - column_totals)
+    diff = np.abs((input_output_matrix * col_scalars[:, np.newaxis]).sum(axis=0) - column_totals)
     count = np.sum(input_output_matrix)-np.sum(column_totals)
 
     # Check for convergence
     if np.all(diff < tolerance):
+        print("Convergence achieved after", iteration, "iterations.")
         break
 
-    if (count) > 0.95:
-        break
+else:
+    print("Maximum iterations reached without convergence.")
+    
+    # if (count) > 0.95:
+    #     break
     
 final_matrix2 = (np.diag(col_scalars)) @ input_output_matrix @ (np.diag(row_scalars))
 
@@ -194,7 +205,7 @@ print(input_output_matrix.sum(axis = 0)) #columns
 # print(final_matrix2.sum(axis = 0))
 
 #%%Calculate the gross output of the gross output and input 
-full_output = input_output_matrix.sum(axis = 0) + Y
+full_output = input_output_matrix.sum(axis = 0) + Ystar
 full_input = input_output_matrix.sum(axis = 1) + Vstar
 #%%
 resultsdf = pd.DataFrame()
