@@ -198,12 +198,12 @@ delta_output = input_output_matrix.sum(axis = 1)
 delta_input = input_output_matrix.sum(axis = 0)
 #%%
 resultsdf = pd.DataFrame()
-# resultsdf["output"] = full_output
-# resultsdf["input"] = full_input
-resultsdf["base output"] = delta_output
-resultsdf["base input"] = delta_input
-resultsdf["original output"] = input_output_matrix.sum(axis=1) 
-resultsdf["original input"] = input_output_matrix.sum(axis=0) 
+resultsdf["output"] = full_output
+resultsdf["input"] = full_input
+# resultsdf["base output"] = delta_output
+# resultsdf["base input"] = delta_input
+# resultsdf["original output"] = input_output_matrix.sum(axis=1) 
+# resultsdf["original input"] = input_output_matrix.sum(axis=0) 
 
 
 resultsdf.plot(kind= 'bar') # quick check of the difference between the output - input (should be equal)
