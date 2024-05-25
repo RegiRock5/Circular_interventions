@@ -43,6 +43,8 @@ L = np.linalg.inv(I - A)
 x_org = L @ Y.sum(axis=1)
 Z_org = A @ (np.diag(x_org))
 
+# Z_org.NL.loc["NL"]
+
 #%%population growth is based on increasing the final demadn to match the growing population and multiply it with the final dea
 Y.NL = Y.NL * Populationgrowth
 x = L @ Y
@@ -50,6 +52,7 @@ Z = A@(np.diag(x.sum(axis = 1)))
 Z.columns = Z.index
 gross_output = Z.sum(axis = 1) + Y.sum(axis = 1)
 
+Z_popgrowth = Z.copy()
 
 #%%  prepare necessary data
 Va = gross_output - Z.sum(axis=1)
@@ -63,19 +66,22 @@ Y_agg_org = Y_agg.copy()
 
 #%% Apply changes in Final demand, Value added and Z 
 
-Va_nl = Va.NL
-Va_nl = Va_nl * TFP_change
+Va_nl = Va#.NL
+Va_nl = Va_nl / TFP_change
 
-Z_nl = Z.NL
-Z_nl = Z_nl / TFP_change
+Z_nl = Z#.NL
+Z_nl = Z_nl * TFP_change
 
-Y_agg_nl = Y_agg.NL
-Y_agg_nl = Y_agg_nl* TFP_change
+Y_agg_nl = Y_agg#.NL
+Y_agg_nl = Y_agg_nl / TFP_change
 
 #%%apply changes back into the full dataset
-Va.NL = Va_nl.values
-Z.NL= Z_nl
-Y_agg.NL = Y_agg_nl
+# Va.NL = Va_nl.values
+# Z.NL= Z_nl
+# Y_agg.NL = Y_agg_nl
+Va = Va_nl.values
+Z= Z_nl
+Y_agg = Y_agg_nl
 
 new_input = Z.sum(axis = 1) + Va
 newY = new_input - Z.sum(axis = 0)
@@ -149,7 +155,7 @@ sector_labels = sector_labels.values
 sector_labels = resultsdf.org_output.groupby(level=1, axis=0, sort=False).sum()
 #%% plot the data 
 # Create a figure and subplots
-fig, axs = plt.subplots(4, 1, sharex=True, sharey=True, figsize=(50, 22))
+fig, axs = plt.subplots(4, 1, sharex=True, sharey=True, figsize=(25, 22))
 plt.rcParams.update({'font.size': 8})  # Reducing font size
 
 # Plot the data on each subplot
@@ -173,8 +179,8 @@ for ax in axs:
 tickvalues = range(0,len(sector_labels))
 
 for ax in axs:
+    ax.xaxis.set_tick_params(which='minor')
     ax.tick_params(rotation=90)
-    ax.xaxis.set_tick_params(which='both')
 
 # Adjust layout to prevent overlapping
 plt.tight_layout(pad=3.0)
@@ -185,7 +191,7 @@ plt.show()
 
 #%% plot the data 2
 # Create a figure and subplots
-fig, axs = plt.subplots(4, 1, sharex=True, sharey=True, figsize=(70, 22))
+fig, axs = plt.subplots(4, 1, sharex=True, sharey=True, figsize=(30, 22))
 plt.rcParams.update({'font.size': 8})  # Reducing font size
 
 # Plot the data on each subplot
@@ -204,7 +210,6 @@ axs[0].legend()
 axs[1].legend()
 axs[2].legend()
 axs[3].legend()
-axs[4].legend()
 
 for ax in axs:
     ax.legend()
@@ -223,3 +228,78 @@ plt.xticks(sector_labels)
 
 # Show the plot
 plt.show()
+
+#%%
+
+#%%
+Z_org.columns = Z.index
+# Z_org.NL.loc["NL"].plot()
+# Z_popgrowth.NL.loc["NL"].plot()
+Zdiffpop = Z_popgrowth.NL.loc["NL"] - Z_org.NL.loc["NL"] 
+# Zdiffpop.sum(axis = 1).plot()
+
+
+fig, axs = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(30, 22))
+plt.rcParams.update({'font.size': 20})  # Reducing font size
+
+# Plot the data on each subplot
+Zdiffpop.sum(axis = 0).plot(ax=axs[0], label="difference in output per industry")
+Zdiffpop.sum(axis = 1).plot(ax=axs[1], label="difference in input per industry")
+
+
+# Add legend to each subplot
+axs[0].legend()
+axs[1].legend()
+
+    
+tickvalues = range(0,len(sector_labels))
+
+for ax in axs:
+    ax.xaxis.set_tick_params(which='minor')
+    ax.tick_params(rotation=90)
+
+# Adjust layout to prevent overlapping
+plt.tight_layout(pad=3.0)
+plt.xticks(range(0,len(sector_labels.index)), sector_labels.index)
+
+# Show the plot
+plt.show()
+
+#%%
+fig, axs = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(30, 22))
+plt.rcParams.update({'font.size': 20})  # Reducing font size
+
+# Plot the data on each subplot
+Zdiffpop.sum(axis=0).plot(ax=axs[0], label="difference in output per industry")
+Zdiffpop.sum(axis=1).plot(ax=axs[1], label="difference in input per industry")
+
+# Add legend to each subplot
+axs[0].legend()
+axs[1].legend()
+
+# Define the threshold
+threshold = 700  # Example threshold
+
+# Determine which sectors meet the threshold
+output_values = Zdiffpop.sum(axis=0)
+input_values = Zdiffpop.sum(axis=1)
+
+# Set tick values and labels based on the threshold
+tickvalues = range(0, len(sector_labels))
+filtered_labels = [label if output_values[i] > threshold or input_values[i] > threshold else '' for i, label in enumerate(sector_labels.index)]
+
+# Apply x-axis labels conditionally
+for ax in axs:
+    ax.xaxis.set_tick_params(which='minor')
+    ax.tick_params(rotation=90)
+    ax.set_xticks(tickvalues)
+    ax.set_xticklabels(filtered_labels)
+
+# Adjust layout to prevent overlapping
+plt.tight_layout(pad=3.0)
+
+# Show the plot
+plt.show()
+
+#%% 
+Zdiffpop.sum(axis=1).sort_values()

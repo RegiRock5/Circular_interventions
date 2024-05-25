@@ -7,76 +7,298 @@ Created on Tue Apr 16 16:15:16 2024
 # Import modules
 import pandas as pd
 import numpy as np
-#%%
+import matplotlib.pyplot as plt
+#%% Import all used data (baseline and all 3 scenarios)
 path = r"C:/Industrial_ecology/Thesis/IOT_2021_ixi/"
-outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/outputdata/" 
+outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Output/" 
+indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
+#indicator ="CO2 - combustion - air"
+#indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
 
+
+#%%
 #"C:\Industrial_ecology\Thesis\Circularinterventions\Code\Input_circular_interventions\newZ.csv"
-Anew = pd.read_csv(f"{outputpath}newA2.csv", sep=',', header=[0, 2])
 Y = pd.read_csv(f'{path}Y.txt' , sep='\t', index_col=[0, 1], header=[0, 1])
 A = pd.read_csv(f'{path}A.txt', sep='\t', index_col=[0, 1], header=[0, 1])
-Ynew = pd.read_csv(f'{outputpath}newY.csv' , sep=',', header=[0,2])
 
+Y_Al = pd.read_csv(f'{outputpath}Y_Al_adjusted.csv' , sep=',',index_col=[0,1,2], header=[0,2])
+A_Al = pd.read_csv(f"{outputpath}A_Al_adjusted.csv", sep=',',index_col=[0,1,2], header=[0, 2])
+
+Y_St = pd.read_csv(f'{outputpath}Y_St_adjusted.csv' , sep=',',index_col=[0,1,2], header=[0,2])
+A_St = pd.read_csv(f"{outputpath}A_St_adjusted.csv", sep=',',index_col=[0,1,2], header=[0, 2])
+
+Y_full = pd.read_csv(f'{outputpath}Y_full_adjusted.csv' , sep=',',index_col=[0,1,2], header=[0,2])
+A_full = pd.read_csv(f"{outputpath}A_full_adjusted.csv", sep=',',index_col=[0,1,2], header=[0, 2])
+
+Y.index = Y.index
+A.index = A.index
 #%%
 # Import satellite accounts
 F_sat = pd.read_csv(f'{path}satellite/F.txt' , sep='\t', index_col=[0], header=[0, 1])
 F_sat_hh = pd.read_csv(f'{path}satellite/F_hh.txt' , sep='\t', index_col=[0], header=[0, 1])
-#%%
-# Import impact accounts
+
+F_sat_Al = pd.read_csv(f'{outputpath}F_Al_adjusted.csv' , sep=',', index_col=[0], header=[0, 2])
+F_sat_St = pd.read_csv(f'{outputpath}F_St_adjusted.csv' , sep=',', index_col=[0], header=[0, 2])
+F_sat_full = pd.read_csv(f'{outputpath}F_full_adjusted.csv' , sep=',', index_col=[0], header=[0, 2])
+#%% Import impact accounts
 F_imp = pd.read_csv(f'{path}impacts/F.txt' , sep='\t', index_col=[0], header=[0, 1])
 F_imp_hh = pd.read_csv(f'{path}impacts/F_hh.txt' , sep='\t', index_col=[0], header=[0, 1])
+#%% Perform CBA and PBA for baseline (2021)
 
-
-#%%
+#CBA prepare data
 I = np.identity(A.shape[0])
 L = np.linalg.inv(I-A)
 x = L @ Y.sum(axis=1)
-#%%
+
 x_inv = x.copy()
 x_inv[x_inv!=0] = 1/x_inv[x_inv!=0]
-#%%
-indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
-indexfsat = F_sat.index.sort_values()
-#%%
-F_energy_use = F_sat.loc[indicator]
-F_hh_energy_use = F_sat_hh.loc[indicator]
-#%%
-# Intensities 
-f_energy_use = F_energy_use * x_inv
+
+F_indicator = F_sat.loc[indicator]
+F_hh_indicator = F_sat_hh.loc[indicator]
+
+# calculate intensities
+f_indicator = F_indicator @ np.diag(x_inv)
 Y_reg = Y.groupby(level=0, axis=1, sort=False).sum()
-e_baseline = f_energy_use @ L @ Y_reg + F_hh_energy_use.groupby(level=0, axis=0, sort=False).sum()
-e_baseline.sort_values().iloc[[0, -1]]
+
+#Consumption modeling baseline
+CBA_baseline = f_indicator @ L @ Y_reg + F_hh_indicator.groupby(level=0, axis=0, sort=False).sum()
+CBA_baseline.sort_values().iloc[[0, -1]]
+
+#PBA calculations 
+PBA_baseline = np.diag(f_indicator) @ x
+PBA_baseline = pd.DataFrame(PBA_baseline)
+PBA_baseline.index = A.index
+PBA_baseline = PBA_baseline.groupby(level=0, axis=0, sort=False).sum()
+
+#%% Perform CBA and PBA for scenario 1 
+
+#CBA prepare data
+I = np.identity(A_Al.shape[0])
+L = np.linalg.inv(I-A_Al)
+x = L @ Y_Al.sum(axis=1)
+
+x_inv = x.copy()
+x_inv[x_inv!=0] = 1/x_inv[x_inv!=0]
+
+F_indicator = F_sat_Al.loc[indicator]
+F_hh_indicator = F_sat_hh.loc[indicator]
+
+# calculate intensities
+f_indicator = F_indicator @ np.diag(x_inv)
+Y_reg = Y_Al.groupby(level=0, axis=1, sort=False).sum()
+
+#Consumption modeling baseline
+CBA_Al = f_indicator @ L @ Y_reg + F_hh_indicator.groupby(level=0, axis=0, sort=False).sum()
+CBA_Al.sort_values().iloc[[0, -1]]
+
+#PBA calculations 
+PBA_Al = np.diag(f_indicator) @ x
+PBA_Al = pd.DataFrame(PBA_Al)
+PBA_Al.index = A.index
+PBA_Al = PBA_Al.groupby(level=0, axis=0, sort=False).sum()
+
+#%% Perform CBA and PBA for scenario 2
+
+#CBA prepare data
+I = np.identity(A_St.shape[0])
+L = np.linalg.inv(I-A_St)
+x = L @ Y_St.sum(axis=1)
+
+x_inv = x.copy()
+x_inv[x_inv!=0] = 1/x_inv[x_inv!=0]
+
+F_indicator = F_sat_St.loc[indicator]
+F_hh_indicator = F_sat_hh.loc[indicator]
+
+# calculate intensities
+f_indicator = F_indicator @ np.diag(x_inv)
+Y_reg = Y_St.groupby(level=0, axis=1, sort=False).sum()
+
+#Consumption modeling baseline
+CBA_St = f_indicator @ L @ Y_reg + F_hh_indicator.groupby(level=0, axis=0, sort=False).sum()
+CBA_St.sort_values().iloc[[0, -1]]
+
+#PBA calculations 
+PBA_St = np.diag(f_indicator) @ x
+PBA_St = pd.DataFrame(PBA_St)
+PBA_St.index = A.index
+PBA_St = PBA_St.groupby(level=0, axis=0, sort=False).sum()
+
+#%% Perform CBA and PBA for scenario 3
+
+#CBA prepare data
+I = np.identity(A_full.shape[0])
+L = np.linalg.inv(I-A_full)
+x = L @ Y_full.sum(axis=1)
+
+x_inv = x.copy()
+x_inv[x_inv!=0] = 1/x_inv[x_inv!=0]
+
+F_indicator = F_sat_full.loc[indicator]
+F_hh_indicator = F_sat_hh.loc[indicator]
+
+# calculate intensities
+f_indicator = F_indicator @ np.diag(x_inv)
+Y_reg = Y_full.groupby(level=0, axis=1, sort=False).sum()
+
+#Consumption modeling baseline
+CBA_full = f_indicator @ L @ Y_reg + F_hh_indicator.groupby(level=0, axis=0, sort=False).sum()
+CBA_full.sort_values().iloc[[0, -1]]
+
+#PBA calculations 
+PBA_full = np.diag(f_indicator) @ x
+PBA_full = pd.DataFrame(PBA_full)
+PBA_full.index = A.index
+PBA_full = PBA_full.groupby(level=0, axis=0, sort=False).sum()
+
+
+#%% Create one dataframe containing all country emmissions
+
+CBAframe = {"baseline": CBA_baseline,
+         "scenario_Al": CBA_Al,
+         "scenario_St": CBA_St,
+         "scenario_both": CBA_full}
+
+CBAdf = pd.DataFrame(CBAframe)
+CBAdf["differ"] = CBAdf["scenario_both"] - CBAdf["baseline"]
+CBAdf["difference"] = CBAdf["scenario_St"] - CBAdf["baseline"]
+CBAdf["difference2"] = CBAdf["scenario_Al"] - CBAdf["baseline"]
+
+#CBAdf.plot()
+PBA_baseline = PBA_baseline.squeeze()
+PBA_Al = PBA_Al.squeeze()
+PBA_St = PBA_St.squeeze()
+PBA_full = PBA_full.squeeze()
+
+
+PBAframe = {"baseline": PBA_baseline,
+         "scenario_Al": PBA_Al,
+         "scenario_St": PBA_St,
+         "scenario_both": PBA_full}
+
+PBAdf = pd.DataFrame(PBAframe)
+PBAdf["differ"] = PBAdf["scenario_both"] - PBAdf["baseline"]
+PBAdf["difference"] = PBAdf["scenario_St"] - PBAdf["baseline"]
+PBAdf["difference2"] = PBAdf["scenario_Al"] - PBAdf["baseline"]
+
+#PBAdf.baseline.plot("bar")
+
+#%%Plotting results CBA
+fig, axs = plt.subplots(4, 1, sharex=True, sharey=True, figsize=(25, 22))
+plt.rcParams.update({'font.size': 8})  # Reducing font size
+
+# Plot the data on each subplot
+CBAdf.baseline.plot(ax=axs[0], label="CBA baseline", color = "darkorange")
+CBAdf.scenario_Al.plot(ax=axs[1], label="CBA Al", color="red")
+CBAdf.scenario_St.plot(ax=axs[2], label="CBA St", color="cyan")
+CBAdf.scenario_both.plot(ax=axs[3], label="CBA both", color="magenta")
+PBAdf.baseline.plot(ax=axs[0], label="PBA baseline", color = "aqua")
+PBAdf.scenario_Al.plot(ax=axs[1], label="PBA Al", color="royalblue")
+PBAdf.scenario_St.plot(ax=axs[2], label="PBA St", color="forestgreen")
+PBAdf.scenario_both.plot(ax=axs[3], label="PBA both", color="gold")
+
+# CBAdf.differ.plot(ax=axs[0], label="CBA baseline", color = "darkorange")
+# PBAdf.differ.plot(ax=axs[1], label="CBA Al", color="red")
+
+# axs[0].bar(CBAdf.index, CBAdf['differ'], label="Difference in CBA", color="darkorange")
+# axs[1].bar(PBAdf.index, PBAdf['differ'], label="difference in PBA", color="blue")
+# axs[0].bar(CBAdf.index, CBAdf['difference'], label="Difference in CBA st", color="red")
+# axs[1].bar(PBAdf.index, PBAdf['difference'], label="difference in PBA st", color="green")
+# axs[0].bar(CBAdf.index, CBAdf['difference2'], label="Difference in CBA AL", color="gold")
+# axs[1].bar(PBAdf.index, PBAdf['difference2'], label="difference in PBA AL", color="magenta")
+# Add legend to each subplot
+axs[0].legend()
+axs[1].legend()
+axs[2].legend()
+axs[3].legend()
+
+
+bar_width = 0.25
+
+# for ax in axs:
+#     ax.legend()
+
+# #tickvalues = range(0,len(sector_labels))
+
+for ax in axs:
+    ax.set_xticks([r + bar_width for r in range(len(CBAdf))])
+    ax.set_xticklabels(CBAdf.index, rotation=90)
+    ax.grid(True)  # Add grid lines
+
+# # Adjust layout to prevent overlapping
+# plt.tight_layout(pad=3.0)
+# #plt.xticks(range(0,len(sector_labels.index)), sector_labels.index)
+
+# Show the plot
+plt.bar.show()
 
 #%%
-Lnew = np.linalg.inv(I-Anew)
-xnew = Lnew @ Y.sum(axis = 1)
-xnew_inv = xnew.copy()
-xnew_inv[xnew_inv!=0] = 1/xnew_inv[xnew_inv!=0]
-f_scene = F_energy_use * xnew_inv
-Ynew_reg = Ynew.groupby(level=0, axis=1, sort=False).sum()
+
+# Number of bars
+n_bars = 3
+bar_width = 0.25
+
+# Create subplots
+fig, axs = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(25, 22))
+plt.rcParams.update({'font.size': 8})  # Reducing font size
+
+# Calculate bar positions
+r1 = np.arange(len(CBAdf))
+r2 = [x + bar_width for x in r1]
+r3 = [x + bar_width for x in r2]
+
+# Plot the data on each subplot as bar charts with bars next to each other
+axs[0].bar(r1, CBAdf['differ'], width=bar_width, label="Difference in CBA", color="darkorange")
+axs[0].bar(r2, CBAdf['difference'], width=bar_width, label="Difference in CBA st", color="red")
+axs[0].bar(r3, CBAdf['difference2'], width=bar_width, label="Difference in CBA AL", color="gold")
+
+axs[1].bar(r1, PBAdf['differ'], width=bar_width, label="Difference in PBA", color="blue")
+axs[1].bar(r2, PBAdf['difference'], width=bar_width, label="Difference in PBA st", color="green")
+axs[1].bar(r3, PBAdf['difference2'], width=bar_width, label="Difference in PBA AL", color="magenta")
+
+# Add legend to each subplot
+axs[0].legend()
+axs[1].legend()
+
+# Adjust x-axis labels rotation for better readability
+for ax in axs:
+    ax.set_xticks([r + bar_width for r in range(len(CBAdf))])
+    ax.set_xticklabels(CBAdf.index, rotation=90)
+    ax.grid(True)  # Add grid lines
+
+# Adjust layout to prevent overlapping
+plt.tight_layout(pad=3.0)
+
+# Show the plot
+plt.show()
 
 
 #%%
-e_scene = f_scene @ Lnew @ Ynew_reg + F_hh_energy_use.groupby(level=0, axis=0, sort=False).sum()
-print(e_scene.sort_values().iloc[[0, -1]])
-print(e_baseline.sort_values().iloc[[0, -1]])
+#%% Perform contribution analysis on sectoral level. Removegroup by 
 
-changes = e_scene - e_baseline
-print(changes)
+#CBA prepare data
+I = np.identity(A_full.shape[0])
+L = np.linalg.inv(I-A_full)
+x = L @ Y_full.sum(axis=1)
 
-frame = {"baseline": e_baseline,
-         "scenario": e_scene,
-         "difference": changes}
+x_inv = x.copy()
+x_inv[x_inv!=0] = 1/x_inv[x_inv!=0]
 
-df = pd.DataFrame(frame)
-#%%
-df.loc["NL"].plot(kind = "bar", title = indicator)
-df.plot(kind = "bar", title = indicator, rot=0, figsize=(15,10), fontsize=12)
+F_indicator = F_sat_full.loc[indicator]
+F_hh_indicator = F_sat_hh.loc[indicator]
 
+# calculate intensities
+f_indicator = F_indicator @ np.diag(x_inv)
+Y_reg = Y_full.groupby(level=0, axis=1, sort=False).sum()
 
-df.to_excel(f"{outputpath}output.xlsx")  
+#Consumption modeling baseline
+CBA_full = f_indicator @ L @ Y_reg #+ F_hh_indicator.groupby(level=0, axis=0, sort=False).sum()
+CBA_full.sort_values().iloc[[0, -1]]
 
-#%%Production output E = diag(f)x
-
+#PBA calculations 
+PBA_full = np.diag(f_indicator) @ x
+PBA_full = pd.DataFrame(PBA_full)
+PBA_full.index = A.index
+#PBA_full = PBA_full.groupby(level=0, axis=0, sort=False).sum()
 
 
