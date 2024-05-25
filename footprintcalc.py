@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 path = r"C:/Industrial_ecology/Thesis/IOT_2021_ixi/"
 outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Output/" 
 indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
-#indicator ="CO2 - combustion - air"
-#indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
+indicator ="CO2 - combustion - air"
+indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
 
 
 #%%
@@ -215,6 +215,16 @@ axs[3].legend()
 
 bar_width = 0.25
 
+axs[0].set_title('Baseline CBA and PBA')
+axs[1].set_title('Aluminium scenario CBA and PBA')
+axs[2].set_title('Steel scenario CBA and PBA')
+axs[3].set_title('Full scenario CBA and PBA')
+
+
+# Set title for the entire set of subplots
+fig.suptitle('comparison between the different scenarios', fontsize=16)
+
+
 # for ax in axs:
 #     ax.legend()
 
@@ -230,7 +240,7 @@ for ax in axs:
 # #plt.xticks(range(0,len(sector_labels.index)), sector_labels.index)
 
 # Show the plot
-plt.bar.show()
+plt.show()
 
 #%%
 
@@ -256,6 +266,13 @@ axs[1].bar(r1, PBAdf['differ'], width=bar_width, label="Difference in PBA", colo
 axs[1].bar(r2, PBAdf['difference'], width=bar_width, label="Difference in PBA st", color="green")
 axs[1].bar(r3, PBAdf['difference2'], width=bar_width, label="Difference in PBA AL", color="magenta")
 
+axs[0].set_title('CBA Differences')
+axs[1].set_title('PBA Differences')
+
+# Set title for the entire set of subplots
+fig.suptitle('Comparison of CBA and PBA Differences', fontsize=16)
+
+
 # Add legend to each subplot
 axs[0].legend()
 axs[1].legend()
@@ -276,7 +293,47 @@ plt.show()
 #%%
 #%% Perform contribution analysis on sectoral level. Removegroup by 
 
-#CBA prepare data
+#CBA prepare data Baseline 
+I = np.identity(A.shape[0])
+L = np.linalg.inv(I-A)
+x = L @ Y.sum(axis=1)
+
+x_inv = x.copy()
+x_inv[x_inv!=0] = 1/x_inv[x_inv!=0]
+
+F_indicator = F_sat.loc[indicator]
+F_hh_indicator = F_sat_hh.loc[indicator]
+
+# calculate intensities
+f_indicator = F_indicator @ np.diag(x_inv)
+Y_reg = Y.groupby(level=0, axis=1, sort=False).sum()
+
+#Consumption modeling baseline
+CBA_baseline = f_indicator @ L @ np.diag(Y_reg.sum(axis =1)) #+ F_hh_indicator.groupby(level=0, axis=0, sort=False).sum()
+# CBA_baseline.sort_values().iloc[[0, -1]]
+CBA_baseline = pd.DataFrame(CBA_baseline, index = A.index)
+
+
+#PBA calculations 
+PBA_baseline = np.diag(f_indicator) @ x
+PBA_baseline = pd.DataFrame(PBA_baseline)
+PBA_baseline.index = A.index
+
+
+#%% check baseline divison
+threshold = 1000  # Set your threshold value here
+
+# Filter the DataFrame to include only values above the threshold
+filtered_df = CBA_baseline[CBA_baseline > threshold].dropna()
+
+# Plot the filtered DataFrame with adjusted size and legend placement
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6))
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+plt.show()
+
+#%%
+#CBA prepare data Full data shocks
 I = np.identity(A_full.shape[0])
 L = np.linalg.inv(I-A_full)
 x = L @ Y_full.sum(axis=1)
@@ -292,13 +349,45 @@ f_indicator = F_indicator @ np.diag(x_inv)
 Y_reg = Y_full.groupby(level=0, axis=1, sort=False).sum()
 
 #Consumption modeling baseline
-CBA_full = f_indicator @ L @ Y_reg #+ F_hh_indicator.groupby(level=0, axis=0, sort=False).sum()
-CBA_full.sort_values().iloc[[0, -1]]
+CBA_full = f_indicator @ L @ np.diag(Y_reg.sum(axis =1)) #+ F_hh_indicator.groupby(level=0, axis=0, sort=False).sum()
+#CBA_full.sort_values().iloc[[0, -1]]
+CBA_full = pd.DataFrame(CBA_full, index = A.index)
 
 #PBA calculations 
 PBA_full = np.diag(f_indicator) @ x
 PBA_full = pd.DataFrame(PBA_full)
 PBA_full.index = A.index
-#PBA_full = PBA_full.groupby(level=0, axis=0, sort=False).sum()
 
 
+diffcheckerCBA = CBA_full - CBA_baseline
+diffcheckerPBA = PBA_full - PBA_baseline
+
+#%%
+threshold = 0.01  # Set your threshold value here
+
+# Filter the DataFrame to include only values above the threshold
+filtered_df = diffcheckerCBA[np.absolute(diffcheckerCBA) > threshold].dropna()
+
+# Plot the filtered DataFrame with adjusted size and legend placement
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6))
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.grid(True)  # Add grid lines
+ax.set_title('Filtered difference in CBA (full- baseline)')
+
+
+plt.show()
+
+#%%
+threshold = 0.01  # Set your threshold value here
+
+# Filter the DataFrame to include only values above the threshold
+filtered_df = diffcheckerPBA[np.absolute(diffcheckerPBA) > threshold].dropna()
+
+# Plot the filtered DataFrame with adjusted size and legend placement
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6))
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.grid(True)  # Add grid lines
+ax.set_title('Filtered difference in PBA (full- baseline)')
+
+
+plt.show()
