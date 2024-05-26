@@ -12,10 +12,10 @@ import matplotlib.pyplot as plt
 path = r"C:/Industrial_ecology/Thesis/IOT_2021_ixi/"
 outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Output/" 
 indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
-indicator ="CO2 - combustion - air"
-indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
+# indicator ="CO2 - combustion - air"
+# indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
 
-
+#unit is given in CO2 is given in kg and domestic extraction in kt
 #%%
 #"C:\Industrial_ecology\Thesis\Circularinterventions\Code\Input_circular_interventions\newZ.csv"
 Y = pd.read_csv(f'{path}Y.txt' , sep='\t', index_col=[0, 1], header=[0, 1])
@@ -222,7 +222,7 @@ axs[3].set_title('Full scenario CBA and PBA')
 
 
 # Set title for the entire set of subplots
-fig.suptitle('comparison between the different scenarios', fontsize=16)
+fig.suptitle(f'comparison between the different scenarios in {indicator}', fontsize=16)
 
 
 # for ax in axs:
@@ -274,7 +274,7 @@ axs[0].set_title('CBA Differences')
 axs[1].set_title('PBA Differences')
 
 # Set title for the entire set of subplots
-fig.suptitle('Comparison of CBA and PBA Differences', fontsize=16)
+fig.suptitle(f'Comparison of CBA and PBA Differences in {indicator}', fontsize=16)
 
 
 # Add legend to each subplot
@@ -370,9 +370,10 @@ diffcheckerCBA = CBA_full - CBA_baseline
 diffcheckerPBA = PBA_full - PBA_baseline
 
 #%%
-colors = plt.get_cmap('Set1').colors  # Using 'tab20' colormap
+colors = plt.get_cmap('Dark2').colors  # Using 'tab20' colormap
 
 threshold = 0.01  # Set your threshold value here
+#threshold = 1000000  # Set for CO2
 
 # Filter the DataFrame to include only values above the threshold
 filtered_df = diffcheckerCBA[np.absolute(diffcheckerCBA) > threshold].dropna()
@@ -381,15 +382,15 @@ filtered_df = diffcheckerCBA[np.absolute(diffcheckerCBA) > threshold].dropna()
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color = colors)
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 ax.grid(True)  # Add grid lines
-ax.set_title('Filtered difference in CBA (full- baseline)')
-for ax in axs:
-    ax.set_ylabel("In million euro's")
-    ax.set_xlabel('Regions')
+ax.set_title(f'Filtered difference in CBA (full- baseline) in {indicator}')
+ax.set_ylabel("In million euro's")
+ax.set_xlabel('Regions')
 
 plt.show()
 
 #%%
-threshold = 0.01  # Set your threshold value here
+threshold = 1  # Set your threshold value here
+#threshold = 10000000  # Set for CO2
 
 # Filter the DataFrame to include only values above the threshold
 filtered_df = diffcheckerPBA[np.absolute(diffcheckerPBA) > threshold].dropna()
@@ -399,9 +400,66 @@ filtered_df = diffcheckerPBA[np.absolute(diffcheckerPBA) > threshold].dropna()
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 ax.grid(True)  # Add grid lines
-ax.set_title('Filtered difference in PBA (full- baseline)')
-for ax in axs:
-    ax.set_ylabel("In million euro's")
-    ax.set_xlabel('Regions')
+ax.set_title(f'Filtered difference in PBA (full- baseline) in {indicator}')
+ax.set_ylabel("In million euro's")
+ax.set_xlabel('Regions')
 
+plt.show()
+#%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
+threshold = 0.4
+# Filter the DataFrame to include only values above the threshold
+filtered_df = diffcheckerPBA[np.absolute(diffcheckerPBA) > threshold].dropna()
+
+# Calculate the sum of values below the threshold
+below_threshold_sum = diffcheckerPBA[np.absolute(diffcheckerPBA) <= threshold].sum().sum()
+
+# Add the below-threshold sum as a new row
+filtered_df.loc[('Below Threshold', 'Sum of below threshold'), :] = below_threshold_sum
+
+# Sort the DataFrame to keep the new row at the end (optional)
+# filtered_df = filtered_df.sort_index()
+
+# Choose a color palette (using Set1)
+colors = plt.get_cmap('Set1').colors
+
+# Plot the filtered DataFrame with adjusted size and legend placement
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.grid(True)  # Add grid lines
+ax.set_title(f'Filtered difference in PBA (full- baseline) in {indicator}')
+ax.set_ylabel("In million euro's")
+ax.set_xlabel('Regions')
+
+# Show the plot
+plt.show()
+
+
+#%%
+#%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
+threshold = 100
+
+# Filter the DataFrame to include only values above the threshold
+filtered_df = diffcheckerCBA[np.absolute(diffcheckerCBA) > threshold].dropna()
+
+# Calculate the sum of values below the threshold
+below_threshold_sum = diffcheckerCBA[np.absolute(diffcheckerCBA) <= threshold].sum().sum()
+
+# Add the below-threshold sum as a new row
+filtered_df.loc[('Below Threshold', 'Sum of below threshold'), :] = below_threshold_sum
+
+# Sort the DataFrame to keep the new row at the end (optional)
+# filtered_df = filtered_df.sort_index()
+
+# Choose a color palette (using Set1)
+colors = plt.get_cmap('Set1').colors
+
+# Plot the filtered DataFrame with adjusted size and legend placement
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.grid(True)  # Add grid lines
+ax.set_title(f'Filtered difference in PBA (full- baseline) in {indicator}')
+ax.set_ylabel("In million euro's")
+ax.set_xlabel('Regions')
+
+# Show the plot
 plt.show()
