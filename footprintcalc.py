@@ -188,14 +188,14 @@ fig, axs = plt.subplots(4, 1, sharex=True, sharey=True, figsize=(25, 22))
 plt.rcParams.update({'font.size': 8})  # Reducing font size
 
 # Plot the data on each subplot
-CBAdf.baseline.plot(ax=axs[0], label="CBA baseline", color = "darkorange")
-CBAdf.scenario_Al.plot(ax=axs[1], label="CBA Al", color="red")
-CBAdf.scenario_St.plot(ax=axs[2], label="CBA St", color="cyan")
-CBAdf.scenario_both.plot(ax=axs[3], label="CBA both", color="magenta")
-PBAdf.baseline.plot(ax=axs[0], label="PBA baseline", color = "aqua")
-PBAdf.scenario_Al.plot(ax=axs[1], label="PBA Al", color="royalblue")
-PBAdf.scenario_St.plot(ax=axs[2], label="PBA St", color="forestgreen")
-PBAdf.scenario_both.plot(ax=axs[3], label="PBA both", color="gold")
+CBAdf.baseline.plot(ax=axs[0], label="CBA baseline", color = "#2F94A8")
+CBAdf.scenario_Al.plot(ax=axs[1], label="CBA Al", color="#AD1556")
+CBAdf.scenario_St.plot(ax=axs[2], label="CBA St", color="#000E75")
+CBAdf.scenario_both.plot(ax=axs[3], label="CBA both", color="#512B84")
+PBAdf.baseline.plot(ax=axs[0], label="PBA baseline", color = "#BA6418")
+PBAdf.scenario_Al.plot(ax=axs[1], label="PBA Al", color="#126217")
+PBAdf.scenario_St.plot(ax=axs[2], label="PBA St", color="#29DCA4")
+PBAdf.scenario_both.plot(ax=axs[3], label="PBA both", color="#FFE809")
 
 # CBAdf.differ.plot(ax=axs[0], label="CBA baseline", color = "darkorange")
 # PBAdf.differ.plot(ax=axs[1], label="CBA Al", color="red")
@@ -231,12 +231,16 @@ fig.suptitle('comparison between the different scenarios', fontsize=16)
 # #tickvalues = range(0,len(sector_labels))
 
 for ax in axs:
+    ax.set_ylabel("In million euro's")
+    ax.set_xlabel('Regions')
+    
+for ax in axs:
     ax.set_xticks([r + bar_width for r in range(len(CBAdf))])
-    ax.set_xticklabels(CBAdf.index, rotation=90)
+    ax.set_xticklabels(CBAdf.index)
     ax.grid(True)  # Add grid lines
 
 # # Adjust layout to prevent overlapping
-# plt.tight_layout(pad=3.0)
+plt.tight_layout(pad=3.0)
 # #plt.xticks(range(0,len(sector_labels.index)), sector_labels.index)
 
 # Show the plot
@@ -258,13 +262,13 @@ r2 = [x + bar_width for x in r1]
 r3 = [x + bar_width for x in r2]
 
 # Plot the data on each subplot as bar charts with bars next to each other
-axs[0].bar(r1, CBAdf['differ'], width=bar_width, label="Difference in CBA", color="darkorange")
-axs[0].bar(r2, CBAdf['difference'], width=bar_width, label="Difference in CBA st", color="red")
-axs[0].bar(r3, CBAdf['difference2'], width=bar_width, label="Difference in CBA AL", color="gold")
+axs[0].bar(r1, CBAdf['differ'], width=bar_width, label="Difference in CBA", color="#2F94A8")
+axs[0].bar(r2, CBAdf['difference'], width=bar_width, label="Difference in CBA st", color="#AD1556")
+axs[0].bar(r3, CBAdf['difference2'], width=bar_width, label="Difference in CBA AL", color="#FFE809")
 
-axs[1].bar(r1, PBAdf['differ'], width=bar_width, label="Difference in PBA", color="blue")
-axs[1].bar(r2, PBAdf['difference'], width=bar_width, label="Difference in PBA st", color="green")
-axs[1].bar(r3, PBAdf['difference2'], width=bar_width, label="Difference in PBA AL", color="magenta")
+axs[1].bar(r1, PBAdf['differ'], width=bar_width, label="Difference in PBA", color="#512B84")
+axs[1].bar(r2, PBAdf['difference'], width=bar_width, label="Difference in PBA st", color="#BA6418")
+axs[1].bar(r3, PBAdf['difference2'], width=bar_width, label="Difference in PBA AL", color="#126217")
 
 axs[0].set_title('CBA Differences')
 axs[1].set_title('PBA Differences')
@@ -280,9 +284,12 @@ axs[1].legend()
 # Adjust x-axis labels rotation for better readability
 for ax in axs:
     ax.set_xticks([r + bar_width for r in range(len(CBAdf))])
-    ax.set_xticklabels(CBAdf.index, rotation=90)
+    ax.set_xticklabels(CBAdf.index)
     ax.grid(True)  # Add grid lines
-
+    
+for ax in axs:
+    ax.set_ylabel("In million euro's")
+    ax.set_xlabel('Regions')
 # Adjust layout to prevent overlapping
 plt.tight_layout(pad=3.0)
 
@@ -363,17 +370,21 @@ diffcheckerCBA = CBA_full - CBA_baseline
 diffcheckerPBA = PBA_full - PBA_baseline
 
 #%%
+colors = plt.get_cmap('Set1').colors  # Using 'tab20' colormap
+
 threshold = 0.01  # Set your threshold value here
 
 # Filter the DataFrame to include only values above the threshold
 filtered_df = diffcheckerCBA[np.absolute(diffcheckerCBA) > threshold].dropna()
 
 # Plot the filtered DataFrame with adjusted size and legend placement
-ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6))
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color = colors)
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 ax.grid(True)  # Add grid lines
 ax.set_title('Filtered difference in CBA (full- baseline)')
-
+for ax in axs:
+    ax.set_ylabel("In million euro's")
+    ax.set_xlabel('Regions')
 
 plt.show()
 
@@ -383,11 +394,14 @@ threshold = 0.01  # Set your threshold value here
 # Filter the DataFrame to include only values above the threshold
 filtered_df = diffcheckerPBA[np.absolute(diffcheckerPBA) > threshold].dropna()
 
+
 # Plot the filtered DataFrame with adjusted size and legend placement
-ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6))
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 ax.grid(True)  # Add grid lines
 ax.set_title('Filtered difference in PBA (full- baseline)')
-
+for ax in axs:
+    ax.set_ylabel("In million euro's")
+    ax.set_xlabel('Regions')
 
 plt.show()
