@@ -1,5 +1,8 @@
 import mario
-from mario import slicer, parse_exiobase_3
+from mario import slicer, parse_exiobase_3,parse_from_txt, hybrid_sut_exiobase
+
+import pandas as pd
+import numpy as np
 
 # %%
 regionlock = False #nl and rest of the world
@@ -7,12 +10,39 @@ regionlock2 = False # bigger regions in the world
 sectorlock = False # arbitary sector combinations
 outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Output/" 
 
-#%%
+#%% input path of the IOT 
 iot_path = r"C:/Industrial_ecology/Thesis/IOT_2021_ixi"
 save_path = r'C:/Industrial_ecology/Thesis/Circularinterventions/Code'
 world_IOT = parse_exiobase_3(path=iot_path, version='3.8.1')
 #world_IOT.get_shock_excel(path=save_path)
 
+
+#%%Input of the HIOT 
+A_labels = pd.read_csv(f'{iot_path}/A.txt', sep='\t', index_col=[0, 1], header=[0, 1])
+hiot_path = "C:/Industrial_ecology/Thesis/Circularinterventions/Data/"
+Z_hybrid = pd.read_csv(f"{hiot_path}MR_HIOT_2011_v3_3_18_by_product_technology.csv", index_col=[0,1,2,3,4], header=[0,1,2,3])
+Z_hybrid = pd.DataFrame(Z_hybrid.values, columns = Z_hybrid.columns, index = Z_hybrid.columns)
+Z_hybrid = Z_hybrid.droplevel([2,3], axis=1).droplevel([2,3], axis=0) 
+Y_hybrid = pd.read_csv(f"{hiot_path}MR_HIOT_2011_v3_3_18_FD.csv", index_col=[0,1,2,3,4], header=[0,1,2,3])
+Y_hybrid = pd.DataFrame(Y_hybrid.values, columns = Y_hybrid.columns, index = Z_hybrid.columns)
+Y_hybrid = Y_hybrid.droplevel([2,3], axis=1) 
+x_out = Z_hybrid.sum(axis = 1) + Y_hybrid.sum(axis = 1)
+x_out[x_out!=0] = 1/x_out[x_out!=0]
+
+A_hybrid = Z_hybrid @ np.diag(x_out)
+
+hybrid_output_path = "C:/Industrial_ecology/Thesis/HIOT_2021_ixi"
+#Export the data
+#%% export the data to text files
+#check possibilities for transforming SUTS to file 
+hiot_path = "C:/Industrial_ecology/Thesis/Circularinterventions/Data/data_hiot"
+World_hiot = hybrid_sut_exiobase(hiot_path, extensions=[], model='Database', name=None, calc_all=False)
+World_hiot = World_hiot.Database.to_iot(method = "D")
+
+save_path = r'HiotHiotHiot.xlsx'
+World_hiot.get_shock_excel(path=save_path)
+
+print(World_hiot['z'])
 #%%
 if regionlock == True: 
     world_IOT.aggregate(r'Dutch_agg.xlsx', ignore_nan= True, levels = "Region")
