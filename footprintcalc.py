@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 #%% Import all used data (baseline and all 3 scenarios)
-path = r"C:/Industrial_ecology/Thesis/IOT_2021_ixi/"
+path = r"C:/Industrial_ecology/Thesis/IOT_2025_ixi/"
 outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Output/" 
 indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
 # indicator ="CO2 - combustion - air"
@@ -457,7 +457,7 @@ colors = plt.get_cmap('Set1').colors
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 ax.grid(True)  # Add grid lines
-ax.set_title(f'Filtered difference in PBA (full- baseline) in {indicator}')
+ax.set_title(f'Filtered difference in CBA (full- baseline) in {indicator}')
 ax.set_ylabel("In million euro's")
 ax.set_xlabel('Regions')
 
