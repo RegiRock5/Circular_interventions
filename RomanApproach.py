@@ -16,26 +16,26 @@ TFP_growthrate = 1.055
 TFP_2050 = TFP_2010 * (TFP_growthrate**8)
 TFP_change = TFP_2050/TFP_2010
 Z_change = (1- TFP_2050) / (1 - TFP_2010) 
-current_pop = 17982825
+current_pop = 16655799
 project_pop = 20610000
 Populationgrowth = project_pop / current_pop
 #%%
-path = r"C:/Industrial_ecology/Thesis/IOT_2021_ixi/"
-outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/outputdata/" 
+path = r"C:/Industrial_ecology/Thesis/IOT_2011_ixi/"
+outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Output/" 
 
 #"C:\Industrial_ecology\Thesis\Circularinterventions\Code\Input_circular_interventions\newZ.csv"
-Anew = pd.read_csv(f"{outputpath}newA2.csv", sep=',', header=[0, 2])
+Anew = pd.read_csv(f"{outputpath}A_full_adjusted.csv", sep=',', header=[0, 2])
 Y = pd.read_csv(f'{path}Y.txt' , sep='\t', index_col=[0, 1], header=[0, 1])
 A = pd.read_csv(f'{path}A.txt', sep='\t', index_col=[0, 1], header=[0, 1])
-Ynew = pd.read_csv(f'{outputpath}newY.csv' , sep=',', header=[0,2])
+Ynew = pd.read_csv(f'{outputpath}Y_full_adjusted.csv' , sep=',', header=[0,2])
 
 #%%
 # Import satellite accounts
 F_sat = pd.read_csv(f'{path}satellite/F.txt' , sep='\t', index_col=[0], header=[0, 1])
 F_sat_hh = pd.read_csv(f'{path}satellite/F_hh.txt' , sep='\t', index_col=[0], header=[0, 1])
-#%% Import impact accounts
-F_imp = pd.read_csv(f'{path}impacts/F.txt' , sep='\t', index_col=[0], header=[0, 1])
-F_imp_hh = pd.read_csv(f'{path}impacts/F_hh.txt' , sep='\t', index_col=[0], header=[0, 1])
+# #%% Import impact accounts
+# F_imp = pd.read_csv(f'{path}impacts/F.txt' , sep='\t', index_col=[0], header=[0, 1])
+# F_imp_hh = pd.read_csv(f'{path}impacts/F_hh.txt' , sep='\t', index_col=[0], header=[0, 1])
 
 #%% Make the Z matrix using the A and Y
 I = np.identity(A.shape[0])
@@ -303,3 +303,110 @@ plt.show()
 
 #%% 
 Zdiffpop.sum(axis=1).sort_values()
+
+#%%
+A_labels = A.index
+A_labels = A_labels.to_frame(index=None)
+region_labels = A_labels.region.drop_duplicates().reset_index(drop=True)
+#%% plot the data 2
+# Create a figure and subplots
+fig, axs = plt.subplots(2, 1, sharex=True, sharey=False, figsize=(30, 22))
+plt.rcParams.update({'font.size': 20})  # Reducing font size
+
+# Plot the data on each subplot
+resultsdf.org_output.groupby(level=0, axis=0, sort=False).sum().plot(kind='bar',ax=axs[0], label="Base gross output", color="#2F94A8")
+resultsdf.popgrowth.groupby(level=0, axis=0, sort=False).sum().plot(kind='bar',ax=axs[0], label="Population growth", color="#AD1556")
+resultsdf.difference_pop.groupby(level=0, axis=0, sort=False).sum().plot(kind='bar',ax=axs[1], label="difference population growth", color="#512B84")
+# Add legend to each subplot
+axs[0].legend()
+axs[1].legend()
+axs[1].set_xticks(range(len(region_labels)))
+axs[1].set_xticklabels(region_labels, rotation=90)
+
+for ax in axs:
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    ax.set_ylabel("In million euro's")
+    ax.set_xlabel('Regions')
+    ax.tick_params(axis='x', rotation=0)
+    ax.xaxis.set_tick_params(which='both')
+    ax.grid(True)  # Add grid lines
+# Adjust layout to prevent overlapping
+plt.tight_layout(pad=3.0)
+plt.xticks(sector_labels)
+
+# Show the plot
+plt.show()
+
+#%%
+differencepop =  resultsdf.popgrowth - resultsdf.org_output 
+
+#%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
+threshold = 4000
+
+# Filter the DataFrame to include only values above the threshold
+filtered_df = differencepop[np.absolute(differencepop) > threshold].dropna()
+
+# Calculate the sum of values below the threshold
+below_threshold_sum = differencepop[np.absolute(differencepop) <= threshold].sum().sum()
+
+# Add the below-threshold sum as a new row
+filtered_df[('Below Threshold', 'Sum of below threshold')] = below_threshold_sum
+
+# Choose a color palette (using Set1)
+colors = plt.get_cmap('Set1').colors
+
+# Plot the filtered DataFrame with adjusted size and legend placement
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.grid(True)  # Add grid lines
+# ax.set_title(f'Filtered difference in CBA (Steel - baseline) in {indicator}')
+# ax.set_ylabel(f"{indicator} ({unit})")
+ax.set_xlabel('Regions')
+plt.tight_layout(pad=3.0)
+
+# Show the plot
+plt.show()
+
+#%%import pandas as pd
+
+# Create a figure and subplots
+fig, axs = plt.subplots(2, 1, sharex=True, sharey=False, figsize=(30, 22))
+plt.rcParams.update({'font.size': 20})  # Reducing font size
+
+# Grouping and summing data for plotting
+org_output = resultsdf.org_output.groupby(level=0, axis=0, sort=False).sum()
+popgrowth = resultsdf.popgrowth.groupby(level=0, axis=0, sort=False).sum()
+difference_pop = resultsdf.difference_pop.groupby(level=0, axis=0, sort=False).sum()
+
+# Combine the data into DataFrames for side-by-side plotting
+combined_df_1 = pd.DataFrame({'Gross output': org_output, 'Gross output 2050': popgrowth})
+combined_df_2 = pd.DataFrame({'Delta gross output': difference_pop})
+
+# Plot the data as bar graphs
+combined_df_1.plot(kind='bar', ax=axs[0], color=["#2F94A8", "#AD1556"])
+combined_df_2.plot(kind='bar', ax=axs[1], color=["#512B84"])
+
+# Set titles for each subplot
+axs[0].set_title('Gross output of 2011 and 2050 model')
+axs[1].set_title('Difference due to population growth')
+
+# Customize each subplot
+for ax in axs:
+    ax.legend(loc='best')
+    ax.set_ylabel("Gross output (million euro's)")
+    ax.grid(True)  # Add grid lines
+
+# Set x-ticks and labels for both subplots
+axs[1].set_xticks(range(len(region_labels)))
+axs[1].set_xticklabels(region_labels, rotation=90)
+axs[1].set_xlabel('Regions')
+
+axs[0].set_xticks(range(len(region_labels)))
+axs[0].set_xticklabels(region_labels, rotation=90)
+
+# Adjust layout to prevent overlapping
+plt.tight_layout(pad=4.0)
+
+# Show the plot
+plt.show()
+

@@ -11,53 +11,11 @@ sectorlock = False # arbitary sector combinations
 outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Output/" 
 
 #%% input path of the IOT 
-iot_path = r"C:/Industrial_ecology/Thesis/IOT_2015_ixi"
+iot_path = r"C:/Industrial_ecology/Thesis/IOT_2011_ixi"
 save_path = r'C:/Industrial_ecology/Thesis/Circularinterventions/Code'
 world_IOT = parse_exiobase_3(path=iot_path, version='3.8.1')
 #world_IOT.get_shock_excel(path=save_path)
-#%%
-# #%%Input of the HIOT 
-# hybrid_output_path = "C:/Industrial_ecology/Thesis/HIOT_2021_ixi"
-# F_imp_hh = pd.read_csv(f'{hybrid_output_path}/impacts/F_Y.txt' , sep='\t', index_col=[0], header=[0, 1])
 
-# Z_labels = pd.read_csv(f'{iot_path}/Z.txt', sep='\t', index_col=[0, 1], header=[0, 1])
-# A = pd.read_csv(f'{iot_path}/A.txt', sep='\t', index_col=[0, 1], header=[0,1])
-# Y = pd.read_csv(f'{iot_path}/Y.txt' , sep='\t', index_col=[0, 1], header=[0, 1])
-
-# hiot_path = "C:/Industrial_ecology/Thesis/Circularinterventions/Data/"
-# Z_hybrid = pd.read_csv(f"{hiot_path}MR_HIOT_2011_v3_3_18_by_product_technology.csv", index_col=[0,1,2,3,4], header=[0,1,2,3])
-# Z_hybrid = pd.DataFrame(Z_hybrid.values, columns = Z_hybrid.columns, index = Z_hybrid.columns)
-# Z_hybrid = Z_hybrid.droplevel([2,3], axis=1).droplevel([2,3], axis=0) 
-# Y_hybrid = pd.read_csv(f"{hiot_path}MR_HIOT_2011_v3_3_18_FD.csv", index_col=[0,1,2,3,4], header=[0,1,2,3])
-# Y_hybrid = pd.DataFrame(Y_hybrid.values, columns = Y_hybrid.columns, index = Z_hybrid.columns)
-# Y_hybrid = Y_hybrid.droplevel([2,3], axis=1) 
-# x_out = Z_hybrid.sum(axis = 1) + Y_hybrid.sum(axis = 1)
-# x_out[x_out!=0] = 1/x_out[x_out!=0]
-
-# A_hybrid = Z_hybrid @ np.diag(x_out)
-# A_hybrid = pd.DataFrame(A_hybrid.values, columns = Z_hybrid.columns, index = Z_hybrid.columns)
-
-# hybrid_output_path = "C:/Industrial_ecology/Thesis/HIOT_2021_ixi"
-
-# A_hybrid.to_csv(f'{hybrid_output_path}/A.txt', sep='\t', index=True)  
-# Y_hybrid.to_csv(f'{hybrid_output_path}/Y.txt',sep='\t', index=True)
-# Y_hybrid.to_csv(f'{hybrid_output_path}/satellite/F_Y.txt',sep='\t', index=True)
-# Y_hybrid.to_csv(f'{hybrid_output_path}/satellite/F_Y.txt',sep='\t', index=True)
-# Y_hybrid.to_csv(f'{hybrid_output_path}/impacts/F_Y.txt',sep='\t', index=True)
-
-# world_IOT = parse_exiobase_3(path = hybrid_output_path)
-
-# #Export the data
-# # #%% export the data to text files
-# # #check possibilities for transforming SUTS to file 
-# # hiot_path = "C:/Industrial_ecology/Thesis/Circularinterventions/Data/data_hiot"
-# # World_hiot = hybrid_sut_exiobase(hiot_path, extensions=[], model='Database', name=None, calc_all=False)
-# # World_hiot = World_hiot.to_iot(method = "D")
-
-# # save_path = r'HiotHiotHiot.xlsx'
-# # #World_hiot.get_shock_excel(path=save_path)
-# # World_hiot.to_excel(path = save_path)
-# # print(World_hiot['z'])
 #%%
 if regionlock == True: 
     world_IOT.aggregate(r'Dutch_agg.xlsx', ignore_nan= True, levels = "Region")
@@ -81,7 +39,6 @@ world_IOT.shock_calc(io=r'shocks_al.xlsx', # Path to the excel file
                 notes=['Implement Aluminium shocks']
               )
 #%%Implement Steel shocks
-
 world_IOT.shock_calc(io=r'shocks_st.xlsx', # Path to the excel file
                 z= True, # the shock will be implemented on z
                 Y = True,
@@ -134,34 +91,3 @@ Y_full_adjusted.to_csv(f'{outputpath}Y_full_adjusted.csv', index=True)
 e_full_adjusted.to_csv(f'{outputpath}F_full_adjusted.csv', index=True)
 
 
-#%%
-# new_units= world_IOT.units['Satellite account']
-# print(new_units)
-# #
-
-#%%CO2 - combustion - air
-# world_IOT.plot_matrix(matrix = "X", 
-#                       x = "Region_to",
-#                       color = "Sector_to",
-#                       #filters_Satellite_account = ["CO2 - combustion - air"],
-#                       base_scenario='baseline', # printing the delta_x with respect to baseline scenario,
-#                       path = "Co2test.html")
-
-#%%
-
-#The plot_matrix function can be used to plot the changes of the X
-# world_IOT.plot_matrix(
-#     matrix='F', # plotting the X matrix
-#     x='Region_from', # putting the origin regions on the X axis
-#     color='Sector_from', # colors are defined tby the origin sectors
-#     base_scenario='baseline', # printing the delta_x with respect to baseline scenario,
-#     path = 'delta_X1.html'
-#                 )
-
-#%%
-# world_IOT.plot_matrix(
-#     matrix = 'Y',
-#     x = 'Region_from',
-#     color = 'Region_to',
-#     path= 'final_comnsumtpiton_by_region.html'
-#     )
