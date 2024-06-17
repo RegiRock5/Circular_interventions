@@ -12,10 +12,10 @@ import matplotlib.pyplot as plt
 path = r"C:/Industrial_ecology/Thesis/IOT_2011_ixi/"
 outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Output/" 
 indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
-indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
-unit = "Kt"
-# indicator ="CO2 - combustion - air"
-#unit = "kg"
+#indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
+#unit = "Kt"
+indicator ="CO2 - combustion - air"
+unit = "kg"
 #unit is given in CO2 is given in kg and domestic extraction in kt
 #%%
 current_pop = 16655799	
@@ -54,7 +54,6 @@ F_sat_full = pd.read_csv(f'{outputpath}F_full_adjusted.csv' , sep=',', index_col
 F_imp = pd.read_csv(f'{path}impacts/F.txt' , sep='\t', index_col=[0], header=[0, 1])
 F_imp_hh = pd.read_csv(f'{path}impacts/F_hh.txt' , sep='\t', index_col=[0], header=[0, 1])
 #%% Perform CBA and PBA for baseline (2021)
-
 #CBA prepare data
 I = np.identity(A.shape[0])
 L = np.linalg.inv(I-A)
@@ -81,7 +80,6 @@ PBA_baseline.index = A.index
 PBA_baseline = PBA_baseline.groupby(level=0, axis=0, sort=False).sum()
 
 #%% Perform CBA and PBA for scenario 1 
-
 #CBA prepare data
 I = np.identity(A_Al.shape[0])
 L = np.linalg.inv(I-A_Al)
@@ -106,9 +104,7 @@ PBA_Al = np.diag(f_indicator) @ x
 PBA_Al = pd.DataFrame(PBA_Al)
 PBA_Al.index = A.index
 PBA_Al = PBA_Al.groupby(level=0, axis=0, sort=False).sum()
-
 #%% Perform CBA and PBA for scenario 2
-
 #CBA prepare data
 I = np.identity(A_St.shape[0])
 L = np.linalg.inv(I-A_St)
@@ -263,7 +259,7 @@ bar_width = 0.25
 
 # Create subplots
 fig, axs = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(25, 22))
-plt.rcParams.update({'font.size': 8})  # Reducing font size
+plt.rcParams.update({'font.size': 18})  # Reducing font size
 
 # Calculate bar positions
 r1 = np.arange(len(CBAdf))
@@ -271,19 +267,19 @@ r2 = [x + bar_width for x in r1]
 r3 = [x + bar_width for x in r2]
 
 # Plot the data on each subplot as bar charts with bars next to each other
-axs[0].bar(r1, CBAdf['differ'], width=bar_width, label="Difference in CBA", color="#2F94A8")
-axs[0].bar(r2, CBAdf['difference'], width=bar_width, label="Difference in CBA St", color="#AD1556")
-axs[0].bar(r3, CBAdf['difference2'], width=bar_width, label="Difference in CBA AL", color="#FFE809")
+axs[0].bar(r1, CBAdf['differ'], width=bar_width, label="Difference in CBA Combined scenario", color="#2F94A8")
+axs[0].bar(r2, CBAdf['difference'], width=bar_width, label="Difference in CBA Steel scenario", color="#AD1556")
+axs[0].bar(r3, CBAdf['difference2'], width=bar_width, label="Difference in CBA Aluminium scenario", color="#FFE809")
 
-axs[1].bar(r1, PBAdf['differ'], width=bar_width, label="Difference in PBA", color="#512B84")
-axs[1].bar(r2, PBAdf['difference'], width=bar_width, label="Difference in PBA St", color="#BA6418")
-axs[1].bar(r3, PBAdf['difference2'], width=bar_width, label="Difference in PBA AL", color="#126217")
+axs[1].bar(r1, PBAdf['differ'], width=bar_width, label="Difference in PBA Combined scenario", color="#512B84")
+axs[1].bar(r2, PBAdf['difference'], width=bar_width, label="Difference in PBA Steel scenario", color="#BA6418")
+axs[1].bar(r3, PBAdf['difference2'], width=bar_width, label="Difference in PBA Aluminium scenario", color="#126217")
 
-axs[0].set_title('CBA Differences')
-axs[1].set_title('PBA Differences')
+axs[0].set_title('CBA Differences with baseline')
+axs[1].set_title('PBA Differences with baseline')
 
 # Set title for the entire set of subplots
-fig.suptitle(f'Comparison of CBA and PBA Differences in {indicator}', fontsize=16)
+fig.suptitle(f'Comparison of CBA and PBA Differences in {indicator}', fontsize=20)
 
 
 # Add legend to each subplot
@@ -293,14 +289,14 @@ axs[1].legend()
 # Adjust x-axis labels rotation for better readability
 for ax in axs:
     ax.set_xticks([r + bar_width for r in range(len(CBAdf))])
-    ax.set_xticklabels(CBAdf.index)
+    ax.set_xticklabels(CBAdf.index, fontsize=18, rotation=45)
     ax.grid(True)  # Add grid lines
     
 for ax in axs:
-    ax.set_ylabel("In million euro's")
+    ax.set_ylabel(f"{indicator} ({unit})")
     ax.set_xlabel('Regions')
 # Adjust layout to prevent overlapping
-plt.tight_layout(pad=3.0)
+plt.tight_layout(pad=2.0)
 
 # Show the plot
 plt.show()
@@ -381,7 +377,7 @@ PBA_full.index = A.index
 diffcheckerCBA = CBA_full - CBA_baseline
 diffcheckerPBA = PBA_full - PBA_baseline
 #%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
-threshold = 0.1
+threshold = 5000000
 # Filter the DataFrame to include only values above the threshold
 filtered_df = diffcheckerPBA[np.absolute(diffcheckerPBA) > threshold].dropna()
 
@@ -399,17 +395,17 @@ colors = plt.get_cmap('Set1').colors
 
 # Plot the filtered DataFrame with adjusted size and legend placement
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5),fontsize =11)
 ax.grid(True)  # Add grid lines
-ax.set_title(f'Filtered difference in PBA (combined interventions- baseline) in {indicator}')
-ax.set_ylabel(f"{indicator} ({unit})")
+ax.set_title(f'Filtered difference in PBA (combined interventions- baseline)\n in {indicator} (threshold = {threshold} {unit})', fontsize = 12 )
+ax.set_ylabel(f"{indicator} ({unit})",fontsize = 11)
 ax.set_xlabel('Regions')
 
 # Show the plot
 plt.show()
 
 #%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
-threshold = 0.1
+threshold = 5000000
 
 # Filter the DataFrame to include only values above the threshold
 filtered_df = diffcheckerCBA[np.absolute(diffcheckerCBA) > threshold].dropna()
@@ -430,7 +426,7 @@ colors = plt.get_cmap('Set1').colors
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 ax.grid(True)  # Add grid lines
-ax.set_title(f'Filtered difference in CBA (combined interventions - baseline) in {indicator}')
+ax.set_title(f'Filtered difference in CBA (combined interventions - baseline) in {indicator} ')
 ax.set_ylabel(f"{indicator} ({unit})")
 ax.set_xlabel('Regions')
 
@@ -467,7 +463,7 @@ PBA_Al.index = A.index
 diffcheckerCBA = CBA_Al - CBA_baseline
 diffcheckerPBA = PBA_Al - PBA_baseline
 #%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
-threshold = 0.5
+threshold = 1000000
 # Filter the DataFrame to include only values above the threshold
 filtered_df = diffcheckerPBA[np.absolute(diffcheckerPBA) > threshold].dropna()
 
@@ -485,10 +481,10 @@ colors = plt.get_cmap('Set1').colors
 
 # Plot the filtered DataFrame with adjusted size and legend placement
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5),fontsize =11)
 ax.grid(True)  # Add grid lines
-ax.set_title(f'Filtered difference in PBA (Aluminium interventions- baseline) in {indicator}')
-ax.set_ylabel(f"{indicator} ({unit})")
+ax.set_title(f'Filtered difference in PBA (Aluminium interventions- baseline)\n in {indicator} (threshold = {threshold} {unit})',fontsize =12)
+ax.set_ylabel(f"{indicator} ({unit})",fontsize =11)
 ax.set_xlabel('Regions')
 
 # Show the plot
@@ -553,7 +549,7 @@ PBA_St.index = A.index
 diffcheckerCBA = CBA_St - CBA_baseline
 diffcheckerPBA = PBA_St - PBA_baseline
 #%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
-threshold = 0.5
+threshold = 5000000
 # Filter the DataFrame to include only values above the threshold
 filtered_df = diffcheckerPBA[np.absolute(diffcheckerPBA) > threshold].dropna()
 
@@ -571,17 +567,17 @@ colors = plt.get_cmap('Set1').colors
 
 # Plot the filtered DataFrame with adjusted size and legend placement
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5),fontsize =11)
 ax.grid(True)  # Add grid lines
-ax.set_title(f'Filtered difference in PBA (Steel interventions- baseline) in {indicator}')
-ax.set_ylabel(f"{indicator} ({unit})")
+ax.set_title(f'Filtered difference in PBA (Steel interventions- baseline) \n in {indicator}',fontsize =12)
+ax.set_ylabel(f"{indicator} ({unit})",fontsize =11)
 ax.set_xlabel('Regions')
 
 # Show the plot
 plt.show()
 
 #%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
-threshold = 15
+threshold = 1
 
 # Filter the DataFrame to include only values above the threshold
 filtered_df = diffcheckerCBA[np.absolute(diffcheckerCBA) > threshold].dropna()
@@ -602,7 +598,7 @@ colors = plt.get_cmap('Set1').colors
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
 ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 ax.grid(True)  # Add grid lines
-ax.set_title(f'Filtered difference in CBA (Steel - baseline) in {indicator}')
+ax.set_title(f'Filtered difference in CBA (Steel - baseline) in {indicator} (threshold = {threshold} {unit})')
 ax.set_ylabel(f"{indicator} ({unit})")
 ax.set_xlabel('Regions')
 

@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 current_pop = 16655799
 project_pop = 20610000
 Populationgrowth = project_pop / current_pop
+unit = "tonne"
 #%% input path of the IOT 
 iot_path = r"C:/Industrial_ecology/Thesis/IOT_2015_ixi"
 save_path = r'C:/Industrial_ecology/Thesis/Circularinterventions/Code'
@@ -86,8 +87,9 @@ diffchecker["baseline"] = sortedHybridBaseline
 diffchecker["changes"] = sortedHybrid
 diffchecker["diff"] = diffchecker["changes"] - diffchecker["baseline"]
 
-#A_modify.loc[("NL", "Cultivation of wheat"), ("NL", "Cultivation of wheat")]
+A_modify.loc[("NL", "Cultivation of wheat"), ("NL", "Cultivation of wheat")]
 
+    
 #%%
 file_path = 'C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/shocks_full.xlsx'
 sheet_name = 'Y'  # Replace with the name of your sheet
@@ -119,7 +121,7 @@ extensions = pd.ExcelFile("C:/Industrial_ecology/Thesis/Circularinterventions/Da
 extensions.sheet_names
 
 resource = "Iron ores"
-# resource = "Bauxite and aluminium ores"
+resource = "Bauxite and aluminium ores"
 Emission = "Carbon dioxide, fossil"
 #resource = "Copper ores"
 
@@ -147,8 +149,8 @@ x_ct = L_ct @ Y_modify.values.sum(axis = 1)
 RE_ct = RE_f * x_ct
 EM_ct = EM_f * x_ct
 
-F_diff_RE = (RE.values - RE_ct)#.dropna()
-F_diff_EM = (EM.values - EM_ct)#.dropna()
+F_diff_RE = (RE_ct - RE.values)#.dropna()
+F_diff_EM = (EM_ct - EM.values)#.dropna()
 
 F_diff_RE = pd.DataFrame(F_diff_RE, index = RE.index)
 F_diff_RE_grouped_region = F_diff_RE.groupby(level=0, axis=0, sort=False).sum()
@@ -174,7 +176,7 @@ total_EM = total_EM/1000000 #kg to kilotonnes
 #%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
 colors = plt.get_cmap('Set1').colors
 ax = total_RE.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(20, 12), color=colors)
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize = 11)
 ax.grid(True)  # Add grid lines
 ax.set_title(f'difference baseline and ct for {resource}')
 ax.set_ylabel(f"Resource extraction of {resource} in tonnes")
@@ -183,9 +185,10 @@ ax.set_xlabel('Regions')
 # Show the plot
 plt.show()
 
-
 #%%
-threshold = 10
+F_diff_RE_grouped_region.plot(kind = "bar")
+#%%
+threshold = 1000
 F_relative_change1 = F_diff_RE.droplevel([2,3], axis=0) 
 
 # Filter the DataFrame to include only values above the threshold
@@ -202,20 +205,23 @@ filtered_df.loc[('Below Threshold', 'Sum of below threshold'), :] = below_thresh
 
 # Choose a color palette (using Set1)
 colors = plt.get_cmap('Set1').colors
+plt.rcParams.update({'font.size': 18})  # Reducing font size
 
 # Plot the filtered DataFrame with adjusted size and legend placement
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize = 11)
 ax.grid(True)  # Add grid lines
-ax.set_title(f'Filtered difference in resource extraction (full- baseline) in {resource}')
-ax.set_ylabel("in tonnes")
-ax.set_xlabel('Regions')
+ax.set_title(f'Filtered difference in resource extraction (full- baseline)\n in {resource} (threshold = {threshold} {unit})', fontsize=12)
+ax.set_ylabel(f"{resource} in tonnes", fontsize=12)
+ax.set_xlabel('Regions',fontsize=12)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', fontsize=12)
+# ax.set_yticklabels(ax.get_yticklabels(),fontsize=12)
 
 # Show the plot
 plt.show()
 
 #%%
-threshold = 100000
+threshold = 500000
 F_relative_change1 = F_diff_EM.droplevel([2,3], axis=0) 
 
 # Filter the DataFrame to include only values above the threshold
@@ -232,15 +238,22 @@ filtered_df.loc[('Below Threshold', 'Sum of below threshold'), :] = below_thresh
 
 # Choose a color palette (using Set1)
 colors = plt.get_cmap('Set1').colors
+plt.rcParams.update({'font.size': 18})  # Reducing font size
 
 # Plot the filtered DataFrame with adjusted size and legend placement
-ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(30, 18), color=colors)
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5),fontsize = 11)
 ax.grid(True)  # Add grid lines
-ax.set_title(f'Filtered difference emisison of interest (full- baseline) in {Emission}')
-ax.set_ylabel("in tonnes")
-ax.set_xlabel('Regions')
+ax.set_title(f'Filtered difference emisison of interest (full- baseline)\n in {Emission} (threshold = {threshold} {unit})', fontsize=12)
+ax.set_ylabel(f"{Emission} in tonnes", fontsize=12)
+ax.set_xlabel('Regions',fontsize=12)
 plt.tight_layout(pad=3.0)
+
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', fontsize=12)
+# ax.set_yticklabels(ax.get_yticklabels(),fontsize=12)
 
 # Show the plot
 plt.show()
+
+#%%
+F_diff_RE_total= F_diff_RE.sum()
