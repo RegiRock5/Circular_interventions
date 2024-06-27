@@ -605,3 +605,136 @@ ax.set_xlabel('Regions')
 # Show the plot
 plt.show()
 
+#%% pyramid graph for results
+
+threshold = 1000000
+filtered_df1 = CBAdf.differ[np.absolute(CBAdf.differ) > threshold].dropna()
+
+# Calculate the sum of values below the threshold
+below_threshold_sum1 = CBAdf.differ[np.absolute(CBAdf.differ) <= threshold].sum().sum()
+
+# Add the below-threshold sum as a new row
+filtered_df1['Below Threshold'] = below_threshold_sum1
+
+
+filtered_df2 = PBAdf.differ[np.absolute(PBAdf.differ) > threshold].dropna()
+
+# Calculate the sum of values below the threshold
+below_threshold_sum2 = PBAdf.differ[np.absolute(PBAdf.differ) <= threshold].sum().sum()
+
+# Add the below-threshold sum as a new row
+filtered_df2.loc['Below Threshold'] = below_threshold_sum2
+
+
+
+
+# Number of bars
+n_bars = len(filtered_df)
+bar_width = 1
+
+# Create subplots
+fig, ax = plt.subplots(figsize=(10, 8))
+plt.rcParams.update({'font.size': 18})  # Reducing font size
+
+# Calculate bar positions
+r = np.arange(len(filtered_df1))
+# Plot the data
+ax.barh(r, filtered_df1, height=bar_width, label='difference in CBA', color='#1f77b4')
+r = np.arange(len(filtered_df2))
+ax.barh(r + bar_width, -filtered_df2, height=bar_width, label='difference in PBA', color='#ff7f0e')
+
+# Set labels and title
+ax.set_yticks(r + bar_width / 2)
+ax.set_yticklabels(filtered_df2.index, fontsize=12)
+ax.set_xlabel('difference in Million euros')
+ax.set_title('Difference')
+
+# Add legend
+ax.legend()
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+# Add grid lines
+ax.grid(True)
+
+# Add a vertical line at zero for reference
+plt.axvline(x=0, color='black', linewidth=0.5)
+
+# Adjust layout
+plt.tight_layout()
+
+# Show the plot
+plt.show()
+
+
+#%%
+
+threshold = 500000
+
+def filter_and_summarize(df, threshold):
+    filtered_df = df[np.abs(df) > threshold].dropna()
+    below_threshold_sum = df[np.abs(df) <= threshold].sum().sum()
+    filtered_df.loc['Below Threshold'] = below_threshold_sum
+    return filtered_df
+
+# Filter and summarize both DataFrames
+filtered_df1 = filter_and_summarize(CBAdf['differ'], threshold)
+filtered_df3 = filter_and_summarize(CBAdf['difference'], threshold)
+filtered_df5 = filter_and_summarize(CBAdf['difference2'], threshold)
+
+filtered_df2 = filter_and_summarize(PBAdf['differ'], threshold)
+filtered_df4 = filter_and_summarize(CBAdf['difference'], threshold)
+filtered_df6 = filter_and_summarize(CBAdf['difference2'], threshold)
+
+# Combine the indexes of both filtered dataframes
+combined_index = sorted(set(filtered_df1.index).union(set(filtered_df2.index)))
+
+# Create a DataFrame with the combined index
+combined_df = pd.DataFrame(index=combined_index)
+combined_df['CBA'] = filtered_df1.reindex(combined_index).fillna(0)
+combined_df['PBA'] = filtered_df2.reindex(combined_index).fillna(0)
+combined_df['CBA1'] = filtered_df3.reindex(combined_index).fillna(0)
+combined_df['PBA1'] = filtered_df4.reindex(combined_index).fillna(0)
+combined_df['CBA2'] = filtered_df5.reindex(combined_index).fillna(0)
+combined_df['PBA2'] = filtered_df6.reindex(combined_index).fillna(0)
+
+# Number of bars
+n_bars = len(combined_index)
+bar_width = 0.4
+
+# Create subplots
+fig, ax = plt.subplots(figsize=(30, 16))
+plt.rcParams.update({'font.size': 18})  # Reducing font size
+
+# Calculate bar positions
+r = np.arange(len(combined_index))
+rslash = r +(bar_width/4)
+rslash2 = r - (bar_width/4)
+# Plot the data
+ax.barh(r, combined_df['CBA'], height=bar_width, label='Difference in CBA', color='#1f77b4')
+ax.barh(r + bar_width, -combined_df['PBA'], height=bar_width, label='Difference in PBA', color='#ff7f0e')
+ax.barh(rslash, combined_df['CBA1'], height=bar_width/2, label='Difference in CBA aluminium interventions', color='red')
+ax.barh(rslash + bar_width, -combined_df['PBA1'], height=bar_width/2, label='Difference in PBA aluminium interventions', color='green')
+ax.barh(rslash2, combined_df['CBA2'], height=bar_width/2, label='Difference in CBA steel interventions', color='yellow')
+ax.barh(rslash2 + bar_width, -combined_df['PBA2'], height=bar_width/2, label='Difference in PBA steel interventions', color='purple')
+
+# Set labels and title
+ax.set_yticks(r + bar_width / 2)
+ax.set_yticklabels(combined_index, fontsize=12)
+ax.set_xlabel('Difference in Million Euros')
+ax.set_title('Differences in CBA and PBA')
+
+# Add legend
+ax.legend()
+# ax.legend(loc='center left', bbox_to_anchor=(1, 0.5),fontsize = 12)
+
+# Add grid lines
+ax.grid(True)
+
+# Add a vertical line at zero for reference
+plt.axvline(x=0, color='black', linewidth=0.5)
+
+# Adjust layout
+plt.tight_layout()
+
+# Show the plot
+plt.show()
