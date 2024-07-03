@@ -136,8 +136,6 @@ print(new_output.sort_values())
 
 print(resultsdf.sum(axis = 0))
 #%%
-
-
 resultsdf["popgrowth"] = gross_output
 print(resultsdf.sum(axis = 0))
 print(resultsdf.loc["NL"].sum(axis = 0))

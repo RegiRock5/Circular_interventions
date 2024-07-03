@@ -69,14 +69,22 @@ modified_labels = [insert_break_after_40(label) for label in labels]
 
 #%% import extensions and slice the data you want to use
 F_sat = pd.read_csv(f'{hiot_path}satellite/F.txt' , sep='\t', index_col=[0], header=[0, 1])
+F_imp = pd.read_csv(f'{hiot_path}impacts/F.txt' , sep='\t', index_col=[0], header=[0, 1])
+
 indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
-# indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
-unit = "Kt"
+indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
+indicator = "GHG emissions (GWP100) | Problem oriented approach: baseline (CML, 2001) | GWP100 (IPCC, 2007)"
+unit = "kg"
 # indicator ="CO2 - combustion - air"
 # unit = "kg"
 
-F_indicator = F_sat.loc[indicator]
+
+# F_indicator = F_sat.loc[indicator]
+# f_indicator = F_indicator @ inv_diag_x
+
+F_indicator = F_imp.loc[indicator]
 f_indicator = F_indicator @ inv_diag_x
+
 # F_indicator = pd.DataFrame(f_indicator *  x_pop, index = F_sat.columns) # calcualte impact adjusted to pupulation growht
 #%%
 # file_path = 'C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/shocks_full.xlsx'
@@ -278,3 +286,20 @@ ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', fontsize=12)
 
 # Show the plot
 plt.show()
+
+#%% export data 
+# labelresource = indicator[40:]
+# labelresource = labelresource.replace(" ", "_")
+# #labelresource = "CO2"
+# outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/"
+# diffcheckerimpact.to_csv(f'{outputpath}{labelresource}_mon_impact.csv', index=True)  
+# difplot.to_csv(f'{outputpath}{labelresource}_mon_sens.csv', index=True)
+
+
+#%%
+diffcheckerimpact = diffcheckerimpact/1e6
+difplot = difplot/1e6
+labelresource = "CO2"
+outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/"
+diffcheckerimpact.to_csv(f'{outputpath}{labelresource}_mon_impact.csv', index=True)  
+difplot.to_csv(f'{outputpath}{labelresource}_mon_sens.csv', index=True)

@@ -47,7 +47,7 @@ extensions = pd.ExcelFile(f"{hiot_path}MR_HIOT_2011_v3_3_18_extensions.xlsx")
 extensions.sheet_names
 
 resource = "Iron ores"
-resource = "Bauxite and aluminium ores"
+#resource = "Bauxite and aluminium ores"
 Emission = "Carbon dioxide, fossil"
 #resource = "Copper ores"
 
@@ -208,9 +208,9 @@ diffcheckers = apply_shocks_A_multiple_sequencesreg(file_path, A_hybrid, Y_hybri
 
 sensitivity = 1 
 diffcheckers,diffcheckerimpact = apply_shocks_A_multiple_sequencesreg(file_path, A_hybrid, Y_hybrid, sequencesA, sequencesY, indicatorimpact, indicatorintensity ,threshold,sensitivity)
-sensitivity = 0.95
-diffcheckersmin, diffcheckerminimpact  = apply_shocks_A_multiple_sequencesreg(file_path, A_hybrid, Y_hybrid, sequencesA, sequencesY, indicatorimpact, indicatorintensity ,threshold,sensitivity)
 sensitivity = 1.05
+diffcheckersmin, diffcheckerminimpact  = apply_shocks_A_multiple_sequencesreg(file_path, A_hybrid, Y_hybrid, sequencesA, sequencesY, indicatorimpact, indicatorintensity ,threshold,sensitivity)
+sensitivity = 1.02
 diffcheckersplus,diffcheckerplusimpact = apply_shocks_A_multiple_sequencesreg(file_path, A_hybrid, Y_hybrid, sequencesA, sequencesY, indicatorimpact, indicatorintensity ,threshold,sensitivity)
 
 #%%
@@ -226,8 +226,12 @@ diffcheckerplusimpact.index = A_hybrid.index
 
 
 differencesensitivity= diffcheckerplusimpact-diffcheckerimpact
+differencesensitivity1= diffcheckerminimpact-diffcheckerimpact
 
 differencesensitivity.plot()
+difplot = pd.DataFrame()
+difplot["increase_5%"] = differencesensitivity.intervention2.values
+difplot["increase_2%"] = differencesensitivity1.intervention2.values
 
 #%%
 #indicator = resource
@@ -262,3 +266,24 @@ ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', fontsize=12)
 
 # Show the plot
 plt.show()
+
+#%%
+diffcheckerimpact2 = diffcheckerimpact/1000
+diffcheckerimpact2.groupby(level=0, axis=0, sort=False).sum()
+difplot = difplot/1000
+labelresource = resource
+labelresource = labelresource.replace(" ", "_")
+outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/"
+diffcheckerimpact2.to_csv(f'{outputpath}{labelresource}_hyb_impact.csv', index=True)  
+difplot.to_csv(f'{outputpath}{labelresource}_hyb_sens.csv', index=True)
+
+# #%%
+# diffcheckerimpact2 = diffcheckerimpact/1000
+# diffcheckerimpact2.groupby(level=0, axis=0, sort=False).sum()
+# difplot = difplot/1000
+# labelresource = Emission
+# labelresource = labelresource[:14]
+# labelresource = labelresource.replace(" ", "_")
+# outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/"
+# diffcheckerimpact2.to_csv(f'{outputpath}{labelresource}_hyb_impact.csv', index=True)  
+# difplot.to_csv(f'{outputpath}{labelresource}_hyb_sens.csv', index=True)
