@@ -71,10 +71,12 @@ modified_labels = [insert_break_after_40(label) for label in labels]
 F_sat = pd.read_csv(f'{hiot_path}satellite/F.txt' , sep='\t', index_col=[0], header=[0, 1])
 F_imp = pd.read_csv(f'{hiot_path}impacts/F.txt' , sep='\t', index_col=[0], header=[0, 1])
 
-indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
-indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
-indicator = "GHG emissions (GWP100) | Problem oriented approach: baseline (CML, 2001) | GWP100 (IPCC, 2007)"
-unit = "kg"
+# indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
+# indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
+# indicator = "GHG emissions (GWP100) | Problem oriented approach: baseline (CML, 2001) | GWP100 (IPCC, 2007)"
+# indicator = "GHG emissions (GWP100) | Problem oriented approach: baseline (CML, 2001) | GWP100 (IPCC, 2007)"
+indicator = "Carbon dioxide (CO2) Fuel combustion"
+# unit = "kg"
 # indicator ="CO2 - combustion - air"
 # unit = "kg"
 
@@ -220,7 +222,7 @@ sequencesY =[
 
 indicatorimpact = F_indicator.values
 indicatorintensity = f_indicator
-threshold = 1
+threshold = 30000
 sensitivity = 1 
 A1 = A.copy()  # Replace this with your actual DataFrame
 diffcheckers,diffcheckerimpact = apply_shocks_A_multiple_sequencesreg(file_path, A, Y, sequencesA, sequencesY, indicatorimpact, indicatorintensity ,threshold,sensitivity)
@@ -229,6 +231,8 @@ diffcheckersmin, diffcheckerminimpact  = apply_shocks_A_multiple_sequencesreg(fi
 sensitivity = 1.02
 diffcheckersplus,diffcheckerplusimpact = apply_shocks_A_multiple_sequencesreg(file_path, A, Y, sequencesA, sequencesY, indicatorimpact, indicatorintensity ,threshold,sensitivity)
 
+
+Full_shocks_A = pd.read_excel(file_path, sheet_name='z')
 #%%
 
 diffcheckerimpact = pd.DataFrame.from_dict(diffcheckerimpact)
@@ -240,10 +244,10 @@ diffcheckerminimpact.index = A.index
 diffcheckerplusimpact = pd.DataFrame.from_dict(diffcheckerplusimpact)
 diffcheckerplusimpact.index = A.index
 
-differencesensitivity= diffcheckerplusimpact-diffcheckerimpact
+differencesensitivity= diffcheckerminimpact-diffcheckerimpact
 
 differencesensitivity.plot()
-differencesensitivity1= diffcheckerminimpact-diffcheckerimpact
+differencesensitivity1= diffcheckerplusimpact-diffcheckerimpact
 
 difplot = pd.DataFrame()
 difplot["increase_5%"] = differencesensitivity.intervention_A_2_Y_2.values
@@ -254,13 +258,13 @@ modified_labels = [insert_break_after_40(label) for label in labels]
 regions_labels = Y.index.get_level_values(0).tolist()
 index2 = pd.MultiIndex.from_arrays([regions_labels, modified_labels], names=['regions', 'sectors'])
 
-threshold = 25
+threshold = 0
 unit = "kt"
 F_diff_RE = difplot.values#differencesensitivity.intervention_A_2_Y_2.values
 
 
 F_diff_RE = pd.DataFrame(F_diff_RE, index2)# A.index)
-F_relative_change1 = F_diff_RE/1000000
+F_relative_change1 = F_diff_RE
 
 # Filter the DataFrame to include only values above the threshold
 filtered_df = F_relative_change1[np.abs(F_relative_change1) > threshold].dropna()
@@ -277,7 +281,7 @@ plt.rcParams.update({'font.size': 18})
 
 # Plot the filtered DataFrame with adjusted size and legend placement
 ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=12)
+#ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=12)
 ax.grid(True)
 ax.set_title(f'Filtered differences sensitivity\n {indicator} (threshold = {threshold})', fontsize=12)
 ax.set_ylabel(f"{indicator}\n ({unit})", fontsize=11)
@@ -287,19 +291,18 @@ ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', fontsize=12)
 # Show the plot
 plt.show()
 
-#%% export data 
+# %% export data 
 # labelresource = indicator[40:]
 # labelresource = labelresource.replace(" ", "_")
-# #labelresource = "CO2"
 # outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/"
 # diffcheckerimpact.to_csv(f'{outputpath}{labelresource}_mon_impact.csv', index=True)  
 # difplot.to_csv(f'{outputpath}{labelresource}_mon_sens.csv', index=True)
 
 
 #%%
-diffcheckerimpact = diffcheckerimpact/1e6
-difplot = difplot/1e6
-labelresource = "CO2"
-outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/"
-diffcheckerimpact.to_csv(f'{outputpath}{labelresource}_mon_impact.csv', index=True)  
-difplot.to_csv(f'{outputpath}{labelresource}_mon_sens.csv', index=True)
+# diffcheckerimpact = diffcheckerimpact
+# difplot = difplot
+# labelresource = "CO2"
+# outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/"
+# diffcheckerimpact.to_csv(f'{outputpath}{labelresource}_mon_impact.csv', index=True)  
+# difplot.to_csv(f'{outputpath}{labelresource}_mon_sens.csv', index=True)

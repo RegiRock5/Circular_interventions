@@ -9,9 +9,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 #%%
 inputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/"
-
 hybrid_column = ["hyb_Al_scenario","hyb_Steel_scenario","hyb_combined_scenario"]
 monetary_column = ["mon_Al_scenario","mon_Steel_scenario","mon_combined_scenario"]
+
+unit = "Kilo tonnes"
+co_unit = "Mega tonnes"
+legend_size = 20
+fontfont = 20
 #%%Monetary tables
 indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
 labelresource = indicator[40:]
@@ -124,7 +128,7 @@ bar_width = 0.33
 
 # Create subplots
 fig, ax = plt.subplots(figsize=(30, 16))
-plt.rcParams.update({'font.size': 18})  # Reducing font size
+plt.rcParams.update({'font.size': fontfont})  # Reducing font size
 
 # Calculate bar positions
 spacing_factor = 2  # Increase to add more space between bars
@@ -148,14 +152,14 @@ ax.barh(r + 6 * bar_width, combined_df['mon_Steel_scenario'], height=bar_width, 
 
 # Set labels and title
 ax.set_yticks(r + bar_width / 2)
-ax.set_yticklabels(combined_index, fontsize=12)
-ax.set_xlabel('Domestic extraction of Bauxite and Aluminium ore (kilotonnes)')
-ax.set_title('Difference between IOT and HIOT ')
+ax.set_yticklabels(combined_index)
+ax.set_xlabel(f'Domestic extraction of Bauxite and Aluminium ore ({unit})')
+ax.set_title(f'Difference between IOT and HIOT threshold = {threshold} {unit}')
 ax.set_ylabel('Regions')
 
 # Add legend
 ax.legend()
-ax.legend(loc='right', bbox_to_anchor=(1, 0.5),fontsize = 12)
+ax.legend(loc='right',fontsize = legend_size)
 
 # Add grid lines
 ax.grid(True)
@@ -169,9 +173,10 @@ plt.tight_layout()
 # Show the plot
 plt.show()
 
-#%%
+print(combined_df.sum(0))
+#%% Steel/iron extraction 
 
-threshold = 1
+threshold = 5
 
 hybrid_column = ["hyb_Al_scenario","hyb_Steel_scenario","hyb_combined_scenario"]
 monetary_column = ["mon_Al_scenario","mon_Steel_scenario","mon_combined_scenario"]
@@ -209,7 +214,7 @@ bar_width = 0.33
 
 # Create subplots
 fig, ax = plt.subplots(figsize=(30, 16))
-plt.rcParams.update({'font.size': 18})  # Reducing font size
+plt.rcParams.update({'font.size': fontfont})  # Reducing font size
 
 # Calculate bar positions
 spacing_factor = 2  # Increase to add more space between bars
@@ -231,14 +236,14 @@ ax.barh(r + 6 * bar_width, combined_df['mon_Steel_scenario'], height=bar_width, 
 
 # Set labels and title
 ax.set_yticks(r+ bar_width /2)
-ax.set_yticklabels(combined_index, fontsize=16)
-ax.set_xlabel('Domestic extraction of Iron ore (kilotonnes)')
-ax.set_title('Difference between IOT and HIOT')
+ax.set_yticklabels(combined_index)
+ax.set_xlabel(f'Domestic extraction of Iron ore ({unit})')
+ax.set_title(f'Difference between IOT and HIOT threshold = {threshold} {unit}')
 ax.set_ylabel('Regions')
 
 
 # Add legend
-ax.legend(fontsize = 15)
+ax.legend(fontsize = legend_size)
 #ax.legend(loc='upper left', bbox_to_anchor=(1, 0.5),fontsize = 12)
 
 # Add grid lines
@@ -252,10 +257,12 @@ plt.tight_layout()
 
 # Show the plot
 plt.show()
+print(combined_df.sum(0))
 
-#%%Graph for iron ore
+#%%Graph for Co2 
 
 threshold = 10
+CO_merged_df1 = CO_merged_df/1000
 
 hybrid_column = ["hyb_Al_scenario","hyb_Steel_scenario","hyb_combined_scenario"]
 monetary_column = ["mon_Al_scenario","mon_Steel_scenario","mon_combined_scenario"]
@@ -267,13 +274,13 @@ def filter_and_summarize(df, threshold):
     return filtered_df
 
 # Filter and summarize both DataFrames
-filtered_df1 = filter_and_summarize(CO_merged_df['hyb_Al_scenario'], threshold)
-filtered_df2 = filter_and_summarize(CO_merged_df['hyb_Steel_scenario'], threshold)
-filtered_df3 = filter_and_summarize(CO_merged_df['hyb_combined_scenario'], threshold)
+filtered_df1 = filter_and_summarize(CO_merged_df1['hyb_Al_scenario'], threshold)
+filtered_df2 = filter_and_summarize(CO_merged_df1['hyb_Steel_scenario'], threshold)
+filtered_df3 = filter_and_summarize(CO_merged_df1['hyb_combined_scenario'], threshold)
 
-filtered_df4 = filter_and_summarize(CO_merged_df['mon_Al_scenario'], threshold)
-filtered_df5 = filter_and_summarize(CO_merged_df['mon_Steel_scenario'], threshold)
-filtered_df6 = filter_and_summarize(CO_merged_df['mon_combined_scenario'], threshold)
+filtered_df4 = filter_and_summarize(CO_merged_df1['mon_Al_scenario'], threshold)
+filtered_df5 = filter_and_summarize(CO_merged_df1['mon_Steel_scenario'], threshold)
+filtered_df6 = filter_and_summarize(CO_merged_df1['mon_combined_scenario'], threshold)
 
 # Combine the indexes of both filtered dataframes
 combined_index = sorted(set(filtered_df1.index).union(set(filtered_df4.index)))
@@ -286,18 +293,18 @@ combined_df['hyb_combined_scenario'] = filtered_df3.reindex(combined_index).fill
 combined_df['mon_Al_scenario'] = filtered_df4.reindex(combined_index).fillna(0)
 combined_df['mon_Steel_scenario'] = filtered_df5.reindex(combined_index).fillna(0)
 combined_df['mon_combined_scenario'] = filtered_df6.reindex(combined_index).fillna(0)
-
+combined_df.loc["NL"] =  CO_merged_df1.loc["NL"]
 # Number of bars
-n_bars = len(combined_index)
+n_bars = len(combined_index)+1
 bar_width = 0.33
 
 # Create subplots
 fig, ax = plt.subplots(figsize=(30, 16))
-plt.rcParams.update({'font.size': 18})  # Reducing font size
+plt.rcParams.update({'font.size': fontfont})  # Reducing font size
 
 # Calculate bar positions
 spacing_factor = 2  # Increase to add more space between bars
-r = np.arange(len(combined_index)) * spacing_factor
+r = np.arange(len(combined_index)+1) * spacing_factor
 #r = np.arange(len(combined_index))
 rslash = r +(bar_width/4)
 rslash2 = r - (bar_width/4)
@@ -315,14 +322,14 @@ ax.barh(r + 6 * bar_width, combined_df['mon_Steel_scenario'], height=bar_width, 
 
 # Set labels and title
 ax.set_yticks(r+ bar_width /2)
-ax.set_yticklabels(combined_index, fontsize=16)
-ax.set_xlabel('CO2 eq. differences (kilotonnes)')
-ax.set_title('Difference between IOT and HIOT')
+ax.set_yticklabels(combined_df.index)
+ax.set_xlabel(f'CO2 eq. ({co_unit})')
+ax.set_title(f'Difference between IOT and HIOT threshold = {threshold} {co_unit}')
 ax.set_ylabel('Regions')
 
 
 # Add legend
-ax.legend(fontsize = 15)
+ax.legend(fontsize = legend_size)
 #ax.legend(loc='upper left', bbox_to_anchor=(1, 0.5),fontsize = 12)
 
 # Add grid lines
@@ -337,10 +344,12 @@ plt.tight_layout()
 # Show the plot
 plt.show()
 
+print(combined_df.sum(0))
+
 #%%
 #combined_df.loc["NL"].plot(kind= "bar")
 #%% Sensitivity analysis on aluminium
-threshold = 2
+threshold = 0.3
 hybrid_column = ["hyb_Al_scenario","hyb_Steel_scenario","hyb_combined_scenario"]
 monetary_column = ["mon_Al_scenario","mon_Steel_scenario","mon_combined_scenario"]
 
@@ -377,7 +386,7 @@ bar_width = 0.33
 
 # Create subplots
 fig, ax = plt.subplots(figsize=(30, 16))
-plt.rcParams.update({'font.size': 18})  # Reducing font size
+plt.rcParams.update({'font.size': fontfont})  # Reducing font size
 
 # Calculate bar positions
 spacing_factor = 2  # Increase to add more space between bars
@@ -400,14 +409,14 @@ ax.barh(r + 4 * bar_width, combined_df['mon_increase_2%'], height=bar_width, lab
 
 # Set labels and title
 ax.set_yticks(r + bar_width / 2)
-ax.set_yticklabels(combined_index, fontsize=12)
-ax.set_xlabel('Domestic extraction of Bauxite and Aluminium ore (kilotonnes)')
-ax.set_title('Sensitivity between IOT and HIOT')
+ax.set_yticklabels(combined_index)
+ax.set_xlabel(f'Domestic extraction of Bauxite and Aluminium ore ({unit})')
+ax.set_title(f'Sensitivity between IOT and HIOT threshold = {threshold} {unit}')
 ax.set_ylabel('Regions')
 
 # Add legend
 ax.legend()
-ax.legend(loc='right', bbox_to_anchor=(1, 0.5),fontsize = 12)
+ax.legend(loc='right',fontsize = legend_size)
 
 # Add grid lines
 ax.grid(True)
@@ -423,7 +432,7 @@ plt.show()
 
 
 #%% Sensitivity analysis on iron
-threshold = 2
+threshold = 0.5
 hybrid_column = ["hyb_Al_scenario","hyb_Steel_scenario","hyb_combined_scenario"]
 monetary_column = ["mon_Al_scenario","mon_Steel_scenario","mon_combined_scenario"]
 
@@ -461,7 +470,7 @@ bar_width = 0.33
 
 # Create subplots
 fig, ax = plt.subplots(figsize=(30, 16))
-plt.rcParams.update({'font.size': 18})  # Reducing font size
+plt.rcParams.update({'font.size': fontfont})  # Reducing font size
 
 # Calculate bar positions
 spacing_factor = 2  # Increase to add more space between bars
@@ -484,14 +493,14 @@ ax.barh(r + 4 * bar_width, combined_df['mon_increase_2%'], height=bar_width, lab
 
 # Set labels and title
 ax.set_yticks(r + bar_width / 2)
-ax.set_yticklabels(combined_index, fontsize=12)
-ax.set_xlabel('Domestic extraction of iron ore (kilotonnes)')
-ax.set_title('Sensitivity between IOT and HIOT')
+ax.set_yticklabels(combined_index)
+ax.set_xlabel(f'Domestic extraction of iron ore ({unit})')
+ax.set_title(f'Sensitivity between IOT and HIOT (threshold = {threshold} {unit}')
 ax.set_ylabel('Regions')
 
 # Add legend
 ax.legend()
-ax.legend(loc='right', bbox_to_anchor=(1, 0.5),fontsize = 12)
+ax.legend(loc='right',fontsize = legend_size)
 
 # Add grid lines
 ax.grid(True)
@@ -508,13 +517,14 @@ plt.show()
 
 #%%
 
-threshold = 2
+threshold = 5
 hybrid_column = ["hyb_Al_scenario","hyb_Steel_scenario","hyb_combined_scenario"]
 monetary_column = ["mon_Al_scenario","mon_Steel_scenario","mon_combined_scenario"]
 
 CO2Senshyb = CO2Senshyb.groupby(level=0, axis=0, sort=False).sum()
 CO2Sensmon = CO2Sensmon.groupby(level=0, axis=0, sort=False).sum()
-
+CO2Senshyb1 = CO2Senshyb #/ 1000
+CO2Sensmon1 = CO2Sensmon #/ 1000
 
 def filter_and_summarize(df, threshold):
     filtered_df = df[np.abs(df) > threshold].dropna()
@@ -523,11 +533,11 @@ def filter_and_summarize(df, threshold):
     return filtered_df
 
 # Filter and summarize both DataFrames
-filtered_df1 = filter_and_summarize(CO2Senshyb['increase_5%'], threshold)
-filtered_df2 = filter_and_summarize(CO2Senshyb['increase_2%'], threshold)
+filtered_df1 = filter_and_summarize(CO2Senshyb1['increase_5%'], threshold)
+filtered_df2 = filter_and_summarize(CO2Senshyb1['increase_2%'], threshold)
 
-filtered_df3 = filter_and_summarize(CO2Sensmon['increase_5%'], threshold)
-filtered_df4 = filter_and_summarize(CO2Sensmon['increase_2%'], threshold)
+filtered_df3 = filter_and_summarize(CO2Sensmon1['increase_5%'], threshold)
+filtered_df4 = filter_and_summarize(CO2Sensmon1['increase_2%'], threshold)
 
 # Combine the indexes of both filtered dataframes
 combined_index = sorted(set(filtered_df1.index).union(set(filtered_df4.index)))
@@ -546,7 +556,7 @@ bar_width = 0.33
 
 # Create subplots
 fig, ax = plt.subplots(figsize=(30, 16))
-plt.rcParams.update({'font.size': 18})  # Reducing font size
+plt.rcParams.update({'font.size': fontfont})  # Reducing font size
 
 # Calculate bar positions
 spacing_factor = 2  # Increase to add more space between bars
@@ -569,14 +579,14 @@ ax.barh(r + 4 * bar_width, combined_df['mon_increase_2%'], height=bar_width, lab
 
 # Set labels and title
 ax.set_yticks(r + bar_width / 2)
-ax.set_yticklabels(combined_index, fontsize=12)
-ax.set_xlabel('CO2 footprint (kilotonnes)')
-ax.set_title('Sensitivity between IOT and HIOT')
+ax.set_yticklabels(combined_index)
+ax.set_xlabel(f'CO2 footprint ({unit})')
+ax.set_title(f'Sensitivity between IOT and HIOT (threshold = {threshold} {co_unit} ')
 ax.set_ylabel('Regions')
 
 # Add legend
 ax.legend()
-ax.legend(loc='right', bbox_to_anchor=(1, 0.5),fontsize = 12)
+ax.legend(loc='right',fontsize = legend_size)
 
 # Add grid lines
 ax.grid(True)
@@ -589,3 +599,110 @@ plt.tight_layout()
 
 # Show the plot
 plt.show()
+
+
+#%%
+Mario = pd.DataFrame()
+mariopath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/mario/"
+
+CO2Mario = pd.read_csv(f'{mariopath}CO2_mario_impact.csv', index_col=[0,1], header=[0])  
+AluminiumMario = pd.read_csv(f'{mariopath}Bauxite_and_aluminium_ores_mario_impact.csv', index_col=[0,1], header=[0])  
+IronMario = pd.read_csv(f'{mariopath}iron_ores_mario_impact.csv', index_col=[0,1], header=[0])  
+CO2Mario = pd.read_csv(f'{mariopath}CO2_mario_impact.csv', index_col=[0,1], header=[0])  
+
+
+Mario = pd.DataFrame()
+
+Mario["Mario_al"] = AluminiumMario
+Mario["Mario_st"] = IronMario
+Mario["Mario_CO2"] = CO2Mario
+Mario  = Mario.groupby(level=0, axis=0, sort=False).sum()
+Mario["monetary_al"] = AL_merged_df['mon_combined_scenario']
+Mario["monetary_st"] = ST_merged_df['mon_combined_scenario']
+Mario["monetary_co"] = CO_merged_df['mon_combined_scenario']
+
+#%%
+
+threshold = 0.5
+
+hybrid_column = ["hyb_Al_scenario","hyb_Steel_scenario","hyb_combined_scenario"]
+monetary_column = ["mon_Al_scenario","mon_Steel_scenario","mon_combined_scenario"]
+
+def filter_and_summarize(df, threshold):
+    filtered_df = df[np.abs(df) > threshold].dropna()
+    below_threshold_sum = df[np.abs(df) <= threshold].sum().sum()
+    filtered_df.loc['Below Threshold'] = below_threshold_sum
+    return filtered_df
+
+# Filter and summarize both DataFrames
+filtered_df1 = filter_and_summarize(Mario['Mario_al'], threshold)
+filtered_df2 = filter_and_summarize(Mario['Mario_st'], threshold)
+filtered_df3 = filter_and_summarize(Mario['Mario_CO2'], threshold)
+
+filtered_df4 = filter_and_summarize(Mario['monetary_al'], threshold)
+filtered_df5 = filter_and_summarize(Mario['monetary_st'], threshold)
+filtered_df6 = filter_and_summarize(Mario['monetary_co'], threshold)
+
+# Combine the indexes of both filtered dataframes
+combined_index = sorted(set(filtered_df1.index).union(set(filtered_df4.index)))
+
+# Create a DataFrame with the combined index
+combined_df = pd.DataFrame(index=combined_index)
+combined_df['Mario_al'] = filtered_df1.reindex(combined_index).fillna(0)
+combined_df['Mario_st'] = filtered_df2.reindex(combined_index).fillna(0)
+combined_df['Mario_CO2'] = filtered_df3.reindex(combined_index).fillna(0)
+combined_df['monetary_al'] = filtered_df4.reindex(combined_index).fillna(0)
+combined_df['monetary_st'] = filtered_df5.reindex(combined_index).fillna(0)
+combined_df['monetary_co'] = filtered_df6.reindex(combined_index).fillna(0)
+
+n_bars = len(combined_index)
+bar_width = 0.33
+
+# Create subplots
+fig, ax = plt.subplots(figsize=(30, 16))
+plt.rcParams.update({'font.size': fontfont})  # Reducing font size
+
+# Calculate bar positions
+spacing_factor = 2  # Increase to add more space between bars
+r = np.arange(len(combined_index)) * spacing_factor
+#r = np.arange(len(combined_index))
+rslash = r +(bar_width/4)
+rslash2 = r - (bar_width/4)
+
+cmap = plt.get_cmap("Paired")
+colors = [cmap(i) for i in range(6)]
+
+# Plot the data
+ax.barh(r + bar_width, combined_df['Mario_al'], height=bar_width, label='MARIO Aluminium', color= colors[0])
+ax.barh(r + 2 * bar_width, combined_df['monetary_al'], height=bar_width, label='Monetary Aluminium', color= colors[1])
+ax.barh(r + 3 * bar_width, combined_df['Mario_st'], height=bar_width, label='Mario Steel', color= colors[2])
+ax.barh(r + 4 * bar_width, combined_df['monetary_st'], height=bar_width, label='Monetary Steel', color= colors[3])
+ax.barh(r + 5 * bar_width,combined_df['Mario_CO2']/10000, height=bar_width, label='Mario CO2', color= colors[4])
+ax.barh(r + 6 * bar_width, combined_df['monetary_co']/10000, height=bar_width, label='Monetary CO2', color= colors[5])
+
+# Set labels and title
+ax.set_yticks(r+ bar_width /2)
+ax.set_yticklabels(combined_index)
+ax.set_xlabel(f'different values ({unit})')
+ax.set_title(f'Difference between the use of MARIO and own script = {threshold} {unit}')
+ax.set_ylabel('Regions')
+
+
+# Add legend
+ax.legend(fontsize = legend_size)
+#ax.legend(loc='upper left', bbox_to_anchor=(1, 0.5),fontsize = 12)
+
+# Add grid lines
+ax.grid(True)
+
+# Add a vertical line at zero for reference
+plt.axvline(x=0, color='black', linewidth=1)
+
+# Adjust layout
+plt.tight_layout()
+
+# Show the plot
+plt.show()
+
+#%%
+combined_df.to_excel(f"{mariopath}Mario_table.xlsx", index= True) 

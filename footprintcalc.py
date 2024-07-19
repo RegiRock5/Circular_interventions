@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 #%% Import all used data (baseline and all 3 scenarios)
 path = r"C:/Industrial_ecology/Thesis/IOT_2011_ixi/"
 outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Output/" 
-indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
+# indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
 #indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
 #unit = "Kt"
 indicator ="CO2 - combustion - air"
@@ -53,6 +53,7 @@ F_sat_full = pd.read_csv(f'{outputpath}F_full_adjusted.csv' , sep=',', index_col
 #%% Import impact accounts
 F_imp = pd.read_csv(f'{path}impacts/F.txt' , sep='\t', index_col=[0], header=[0, 1])
 F_imp_hh = pd.read_csv(f'{path}impacts/F_hh.txt' , sep='\t', index_col=[0], header=[0, 1])
+
 #%% Perform CBA and PBA for baseline (2021)
 #CBA prepare data
 I = np.identity(A.shape[0])
@@ -376,6 +377,18 @@ PBA_full.index = A.index
 
 diffcheckerCBA = CBA_full - CBA_baseline
 diffcheckerPBA = PBA_full - PBA_baseline
+
+# labelresource = indicator[40:]
+# labelresource = labelresource.replace(" ", "_")
+# outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/mario/"
+# diffcheckerPBA.to_csv(f'{outputpath}{labelresource}_mario_impact.csv', index=True)  
+
+# diffcheckerPBA = diffcheckerPBA/1000000
+# labelresource = "CO2"
+# outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/mario/"
+# diffcheckerPBA.to_csv(f'{outputpath}{labelresource}_mario_impact.csv', index=True)  
+
+
 #%% Make a graph that includes the below threshold values so it doesnt dissapear out of the system 
 threshold = 5000000
 # Filter the DataFrame to include only values above the threshold
@@ -668,7 +681,7 @@ plt.show()
 
 #%%
 
-threshold = 500000
+threshold = 50000000
 
 def filter_and_summarize(df, threshold):
     filtered_df = df[np.abs(df) > threshold].dropna()

@@ -29,12 +29,18 @@ L_org = np.linalg.inv(I - A_org)
 F_sat = pd.read_csv(f'{hiot_path}satellite/F.txt' , sep='\t', index_col=[0], header=[0, 1])
 indicator = "Domestic Extraction Used - Metal Ores - Bauxite and aluminium ores"
 indicator ="Domestic Extraction Used - Metal Ores - Iron ores"
-unit = "Kt"
+F_indicator = F_sat.loc[indicator]
+
+
+# indicator = "Carbon dioxide (CO2) Fuel combustion"
+# F_imp = pd.read_csv(f'{hiot_path}impacts/F.txt' , sep='\t', index_col=[0], header=[0, 1])
+# F_indicator = F_imp.loc[indicator]
+
+# unit = "Kt"
 # indicator ="CO2 - combustion - air"
 # unit = "kg"
 
 #%%
-F_indicator = F_sat.loc[indicator]
 f_indicator = F_indicator @ inv_diag_x
 Y_reg = Y_org.groupby(level=0, axis=1, sort=False).sum()
 CBA_e_org = np.diag(f_indicator) @ L_org @ Y_reg
@@ -99,16 +105,20 @@ resultsdf["difference_pop"] =  resultsdf["popgrowth"] - resultsdf["orgimpact"]
 # # Show the plot
 # plt.show()
 
-#indicator = resource
-threshold = 1000
+
+
+#%%
+# indicator = "resource"
+threshold = 10
 unit = "kt"
+unit = "Mt"
 difference_e_pop_sum = difference_e_pop.sum(1)
 F_diff_RE = difference_e_pop_sum.values
 CBAE_sum = CBA_e_org.sum(1)
 F_diff_RE = CBAE_sum.values
 
 F_diff_RE = pd.DataFrame(F_diff_RE, index=A.index)
-F_relative_change1 = F_diff_RE
+F_relative_change1 = F_diff_RE/1000
 
 # Filter the DataFrame to include only values above the threshold
 filtered_df = F_relative_change1[np.abs(F_relative_change1) > threshold].dropna()
@@ -118,19 +128,115 @@ below_threshold_sum = F_relative_change1[np.abs(F_relative_change1) <= threshold
 
 # Add the below-threshold sum as a new row
 filtered_df.loc[('Below Threshold', 'Sum of below threshold'), :] = below_threshold_sum
-
+filtered_df = filtered_df.sort_values(by= [0])
 # Choose a color palette (using Set1)
 colors = plt.get_cmap('Set1').colors
-plt.rcParams.update({'font.size': 18})
+colors = ['#E56134', '#B0B0B0'] #iron
+colors = ['#47A690', '#B0B0B0'] # aluminium
+plt.rcParams.update({'font.size': 25})
 
 # Plot the filtered DataFrame with adjusted size and legend placement
-ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(10, 6), color=colors)
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=12)
+ax = filtered_df.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(25, 16), color=colors)
+#plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.2)
+ax.set_ylim(0, filtered_df.max().max() * 1.2)
+
+
+# ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=12)
 ax.grid(True)
-ax.set_title(f'Filtered differences due to population growth\n {indicator} (threshold = {threshold})', fontsize=12)
-ax.set_ylabel(f"{indicator}\n ({unit})", fontsize=11)
+#ax.set_title(f'Filtered differences due to population growth\n {indicator} (threshold = {threshold} {unit})')
+ax.set_ylabel(f"{indicator}\n ({unit})")
 ax.set_xlabel('Regions')
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', fontsize=12)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+
+for p in ax.patches:
+    height = p.get_height()
+    if height != 0:
+        ax.annotate(f'{height:.1f}{unit}', (p.get_x() + p.get_width() / 2., height), ha='center', va='center', fontsize=24, rotation = 90, xytext=(0, 70), textcoords='offset points')
 
 # Show the plot
 plt.show()
+
+
+print(filtered_df.sum())
+
+#%%
+# threshold = 0
+# unit = "kt"
+# unit = "Mt"
+# difference_e_pop_sum = difference_e_pop.sum(0)
+# F_diff_RE = difference_e_pop_sum#.values
+# CBAE_sum = CBA_e.sum(0)
+# F_diff_RE = CBAE_sum#.values
+
+# # F_diff_RE = pd.DataFrame(F_diff_RE, index=A.index)
+# F_relative_change1 = F_diff_RE/1000
+
+# # Filter the DataFrame to include only values above the threshold
+# filtered_df = F_relative_change1[np.abs(F_relative_change1) > threshold].dropna()
+
+# # Calculate the sum of values below the threshold
+# below_threshold_sum = F_relative_change1[np.abs(F_relative_change1) <= threshold].sum().sum()
+
+# # Add the below-threshold sum as a new row
+# # filtered_df.loc[('Below Threshold', 'Sum of below threshold',"nothing", "nothing"), :] = below_threshold_sum
+# filtered_df.loc['Below Threshold'] = below_threshold_sum
+
+# filtered_df = filtered_df.sort_values()#(by= [0])
+
+# filtered_df1 = filtered_df#.droplevel([2,3], axis=0) 
+
+# # Choose a color palette (using Set1)
+# # colors = plt.get_cmap('Set1').colors
+# colors = ['#E56134', '#B0B0B0'] #iron
+# #colors = ['#47A690', '#B0B0B0'] # aluminium
+# plt.rcParams.update({'font.size': 25})
+
+# # Plot the filtered DataFrame with adjusted size and legend placement
+# # ax = filtered_df1.unstack().plot(kind="bar", stacked=True, legend=False, figsize=(25, 16), color=colors)
+# ax = filtered_df1.plot(kind="bar", stacked=True, legend=False, figsize=(25, 16), color=colors)
+
+# #plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.2)
+# ax.set_ylim(0, filtered_df1.max().max() * 1.2)
+
+
+# # ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fontsize=12)
+# ax.grid(True)
+# #ax.set_title(f'Filtered differences due to population growth\n {indicator} (threshold = {threshold} {unit})')
+# ax.set_ylabel(f"{indicator}\n ({unit})")
+# ax.set_xlabel('Regions')
+# ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+
+# for p in ax.patches:
+#     height = p.get_height()
+#     if height != 0:
+#         ax.annotate(f'{height:.1f}{unit}', (p.get_x() + p.get_width() / 2., height), ha='center', va='center', fontsize=24, rotation = 90, xytext=(0, 70), textcoords='offset points')
+
+# # Show the plot
+# plt.show()
+
+
+# print(filtered_df.sum())
+
+
+#%%
+
+# resultsdf = resultsdf/1000
+# labelresource = "Bauxite and aluminium ores"
+# labelresource = labelresource.replace(" ", "_")
+# outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/projection/"
+# resultsdf.to_csv(f'{outputpath}{labelresource}_mon_2050.csv', index=True)  
+
+#%%
+# resultsdf = resultsdf/1000
+# labelresource = "CO2"
+# # labelresource = labelresource[:14]
+# labelresource = labelresource.replace(" ", "_")
+# outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/projection/"
+# resultsdf.to_csv(f'{outputpath}{labelresource}_mon_2050.csv', index=True)  
+
+
+#%% new 
+labelresource = "Iron ores"
+labelresource = labelresource.replace(" ", "_")
+outputpath = "C:/Industrial_ecology/Thesis/Circularinterventions/Code/Input_circular_interventions/output_visuals/projection/version2/"
+filtered_df.to_csv(f'{outputpath}{labelresource}_mon_2050.csv', index=True) 

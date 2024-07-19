@@ -369,7 +369,7 @@ plt.show()
 
 # Create a figure and subplots
 fig, axs = plt.subplots(2, 1, sharex=True, sharey=False, figsize=(30, 22))
-plt.rcParams.update({'font.size': 20})  # Reducing font size
+plt.rcParams.update({'font.size': 25})  # Reducing font size
 
 # Grouping and summing data for plotting
 org_output = resultsdf.org_output.groupby(level=0, axis=0, sort=False).sum()
@@ -408,3 +408,120 @@ plt.tight_layout(pad=4.0)
 # Show the plot
 plt.show()
 
+#%%
+fig, ax1 = plt.subplots(figsize=(30, 22))
+plt.rcParams.update({'font.size': 25})  # Adjust font size
+
+# Grouping and summing data for plotting
+org_output = resultsdf.org_output.groupby(level=0, axis=0, sort=False).sum()
+popgrowth = resultsdf.popgrowth.groupby(level=0, axis=0, sort=False).sum()
+difference_pop = resultsdf.difference_pop.groupby(level=0, axis=0, sort=False).sum()
+
+# Combine the data into DataFrames for side-by-side plotting
+combined_df_1 = pd.DataFrame({'Gross output': org_output* 0.0001, 'Gross output 2050': popgrowth* 0.0001})
+combined_df_2 = pd.DataFrame({'Delta gross output': difference_pop*  0.0001})
+
+# Plot the first set of data
+combined_df_1.plot(kind='bar', ax=ax1, color=["#2F94A8", "#AD1556"])
+
+# Create a secondary y-axis
+ax2 = ax1.twinx()
+
+# Plot the second set of data on the secondary y-axis
+combined_df_2.plot(kind='bar', ax=ax2, color=["#512B84"], position=1)
+
+# Set titles and labels
+ax1.set_title('Gross output of 2011 and 2050 model & Difference due to population growth')
+ax1.set_ylabel("Gross output (million euro's)")
+ax2.set_ylabel("Delta gross output (million euro's)")
+
+# Customize the legends
+ax1.legend(loc='upper left')
+ax2.legend(loc='upper right')
+
+# Add grid lines
+ax1.grid(True)
+ax2.grid(False)
+
+# Set x-ticks and labels
+region_labels = org_output.index  # Assuming these are the region labels
+ax1.set_xticks(range(len(region_labels)))
+ax1.set_xticklabels(region_labels, rotation=90)
+ax1.set_xlabel('Regions')
+
+# Adjust layout to prevent overlapping
+plt.tight_layout(pad=4.0)
+
+# Show the plot
+plt.show()
+
+#%%
+
+# Create a figure and subplots
+fig, ax = plt.subplots(figsize=(30, 22))
+plt.rcParams.update({'font.size': 25})  # Adjust font size
+
+# Grouping and summing data for plotting
+difference_pop = resultsdf.difference_pop.groupby(level=0, axis=0, sort=False).sum()
+
+# Create a DataFrame for plotting
+combined_df_2 = pd.DataFrame({'Delta gross output': difference_pop/1000})
+
+# Plot the data as a bar graph
+combined_df_2.plot(kind='bar', ax=ax, color=["#512B84"])
+
+# Set titles and labels
+ax.set_title('Difference due to population growth')
+ax.set_ylabel("Delta gross output (million euro's)")
+
+# Add grid lines
+ax.grid(True)
+
+# Set x-ticks and labels
+region_labels = difference_pop.index  # Assuming these are the region labels
+ax.set_xticks(range(len(region_labels)))
+ax.set_xticklabels(region_labels, rotation=90)
+ax.set_xlabel('Regions')
+
+# Adjust layout to prevent overlapping
+plt.tight_layout(pad=4.0)
+
+# Show the plot
+plt.show()
+
+#%%
+# Create a figure and subplot
+fig, ax = plt.subplots(figsize=(30, 22))
+plt.rcParams.update({'font.size': 25})  # Adjust font size
+
+# Grouping and summing data for plotting
+org_output = resultsdf.org_output.groupby(level=0, axis=0, sort=False).sum()
+popgrowth = resultsdf.popgrowth.groupby(level=0, axis=0, sort=False).sum()
+
+# Create a DataFrame for plotting
+combined_df_1 = pd.DataFrame({'Gross output': org_output/1000, 'Gross output 2050': popgrowth/1000})
+
+# Plot the data as a bar graph
+combined_df_1.plot(kind='bar', ax=ax, color=["#2F94A8", "#AD1556"])
+
+# Set titles and labels
+ax.set_title('Gross output of 2011 and 2050 model')
+ax.set_ylabel("Gross output (billion euro's)")
+
+# Add grid lines
+ax.grid(True)
+
+# Set x-ticks and labels
+region_labels = org_output.index  # Assuming these are the region labels
+ax.set_xticks(range(len(region_labels)))
+ax.set_xticklabels(region_labels, rotation=90)
+ax.set_xlabel('Regions')
+
+# Customize the legend
+ax.legend(loc='best')
+
+# Adjust layout to prevent overlapping
+plt.tight_layout(pad=4.0)
+
+# Show the plot
+plt.show()
