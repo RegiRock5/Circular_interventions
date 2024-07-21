@@ -1,0 +1,524 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cirk_func &#8212; code documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=6ea52abf"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/cirk_func';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">code documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Aply modifcation for both A and Y matrix</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for cirk_func</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Wed Jun 26 17:30:27 2024</span>
+
+<span class="sd">@author: regin</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1">#%%</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Functions</span>
+<span class="c1"># =============================================================================</span>
+<div class="viewcode-block" id="apply_shocks">
+<a class="viewcode-back" href="../api.html#cirk_func.apply_shocks">[docs]</a>
+<span class="k">def</span> <span class="nf">apply_shocks</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">A_matrix</span><span class="p">,</span> <span class="n">Y_matrix</span><span class="p">,</span> <span class="n">sequencesA</span><span class="p">,</span> <span class="n">sequencesY</span><span class="p">,</span> <span class="n">indicatorimpact</span><span class="p">,</span> <span class="n">indicatorintensity</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span><span class="n">sensitivity</span><span class="p">,</span><span class="n">indicator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Modify the A and Y matrix using an excel file with input parameters</span>
+
+<span class="sd">    Creates a dataframe (same shape as the original dataframe) containing the modified values for both the </span>
+<span class="sd">    A and Y matrix based on the input parameters. </span>
+<span class="sd">    does also include system to perform different parameters</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        File_path (string):</span>
+<span class="sd">            Dataframe containing results of Man-Kendall results (trend, p, intercept and slope)from mk function from  pymannkendall. </span>
+
+<span class="sd">        A_matrix (Dataframe_like)</span>
+<span class="sd">            Baseline A matrix.  </span>
+<span class="sd">            </span>
+<span class="sd">        Y_matrix (Dataframe_like)</span>
+<span class="sd">            Baseline Y matrix.</span>
+
+<span class="sd">        sequencesA (Lists)</span>
+<span class="sd">            List of lists containing the sequence of interventions implemented for each scenario  </span>
+
+<span class="sd">        sequencesY (Lists)</span>
+<span class="sd">            List of lists containing the sequence of interventions implemented for each scenario  </span>
+<span class="sd">            </span>
+<span class="sd">        indicatorimpact (Dataframe_like)</span>
+<span class="sd">            Dataframe containing the environmental impact</span>
+<span class="sd">            </span>
+<span class="sd">        indicatorintensity (Dataframe_like)</span>
+<span class="sd">            Dataframe environmental intensity </span>
+<span class="sd">        </span>
+<span class="sd">        Threshold (float)</span>
+<span class="sd">            Float of the passable threshold for visualization </span>
+<span class="sd">            </span>
+<span class="sd">        Sensitivity (float)</span>
+<span class="sd">            Extra input for changing the input of each intervention (Sensitivity = 1 when no sensitivity is applied)</span>
+<span class="sd">            </span>
+<span class="sd">        indicator (string)</span>
+<span class="sd">            Enviromental impact of interest. </span>
+<span class="sd">            </span>
+<span class="sd">    Returns: df_difference_output (Dictionary)</span>
+<span class="sd">        Difference of gross output</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:  df_difference_impact (Dictionary)</span>
+<span class="sd">        Difference of environmental impact of interest</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        IOError: An error occurred about the size of the model.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Read the Excel file</span>
+    <span class="n">Full_shocks_A</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+    <span class="n">Full_shocks_Y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Dictionary to store results for each sequence of interventions</span>
+    <span class="n">df_difference_output</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">df_difference_impact</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Ensure sequenceA and sequenceY are the same length</span>
+    <span class="n">max_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequencesA</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequencesY</span><span class="p">))</span>
+    <span class="n">sequencesA</span><span class="o">.</span><span class="n">extend</span><span class="p">([[]]</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequencesA</span><span class="p">)))</span>
+    <span class="n">sequencesY</span><span class="o">.</span><span class="n">extend</span><span class="p">([[]]</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequencesY</span><span class="p">)))</span>
+
+    <span class="c1"># Process sequences together</span>
+    <span class="k">for</span> <span class="n">seq_index</span><span class="p">,</span> <span class="p">(</span><span class="n">seqA</span><span class="p">,</span> <span class="n">seqY</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">sequencesA</span><span class="p">,</span> <span class="n">sequencesY</span><span class="p">)):</span>
+        <span class="c1"># Create copies of the original DataFrames to modify</span>
+        <span class="n">A_modify</span> <span class="o">=</span> <span class="n">A_matrix</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">Y_modify</span> <span class="o">=</span> <span class="n">Y_matrix</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Process sequence A and the interventions for the A matrix</span>
+        <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">seqA</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">seq</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">Full_shocks_A</span><span class="p">):</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">Full_shocks_A</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">seq</span><span class="p">]</span>
+                <span class="n">country_row</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;row region&#39;</span><span class="p">]</span>
+                <span class="n">sector_row</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;row sector&#39;</span><span class="p">]</span>
+                <span class="n">country_column</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;column region&#39;</span><span class="p">]</span>
+                <span class="n">sector_column</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;column sector&#39;</span><span class="p">]</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                <span class="n">typechange</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">typechange</span> <span class="o">==</span> <span class="s2">&quot;Percentage&quot;</span><span class="p">:</span>
+                    <span class="n">A_modify</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">country_row</span><span class="p">,</span> <span class="n">sector_row</span><span class="p">),</span> <span class="p">(</span><span class="n">country_column</span><span class="p">,</span> <span class="n">sector_column</span><span class="p">)]</span> <span class="o">*=</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span><span class="o">*</span><span class="n">sensitivity</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">A_modify</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">country_row</span><span class="p">,</span> <span class="n">sector_row</span><span class="p">),</span> <span class="p">(</span><span class="n">country_column</span><span class="p">,</span> <span class="n">sector_column</span><span class="p">)]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">value</span><span class="o">*</span><span class="n">sensitivity</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index </span><span class="si">{</span><span class="n">seq</span><span class="si">}</span><span class="s2"> is out of range for the DataFrame.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Process sequence Y and the interventions for the Y matrix</span>
+        <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">seqY</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">seq</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">Full_shocks_Y</span><span class="p">):</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">Full_shocks_Y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">seq</span><span class="p">]</span>
+                <span class="n">country_row</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;row region&#39;</span><span class="p">]</span>
+                <span class="n">sector_row</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;row sector&#39;</span><span class="p">]</span>
+                <span class="n">country_column</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;column region&#39;</span><span class="p">]</span>
+                <span class="n">demand_column</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;demand category&#39;</span><span class="p">]</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                <span class="n">typechange</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">typechange</span> <span class="o">==</span> <span class="s2">&quot;Percentage&quot;</span><span class="p">:</span>
+                    <span class="n">Y_modify</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">country_row</span><span class="p">,</span> <span class="n">sector_row</span><span class="p">),</span> <span class="p">(</span><span class="n">country_column</span><span class="p">,</span> <span class="n">demand_column</span><span class="p">)]</span> <span class="o">*=</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span><span class="o">*</span><span class="n">sensitivity</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">Y_modify</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">country_row</span><span class="p">,</span> <span class="n">sector_row</span><span class="p">),</span> <span class="p">(</span><span class="n">country_column</span><span class="p">,</span> <span class="n">demand_column</span><span class="p">)]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">value</span><span class="o">*</span><span class="n">sensitivity</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index </span><span class="si">{</span><span class="n">seq</span><span class="si">}</span><span class="s2"> is out of range for the DataFrame.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Groupby to check results</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">A_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">x_modify</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">A_modify</span><span class="p">)</span> <span class="o">@</span> <span class="n">Y_modify</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x_baseline</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">A_matrix</span><span class="p">)</span> <span class="o">@</span> <span class="n">Y_matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">Results_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="n">Results_output</span><span class="p">[</span><span class="s2">&quot;baseline&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_baseline</span>
+        <span class="n">Results_output</span><span class="p">[</span><span class="s2">&quot;changes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_modify</span>
+        <span class="n">Results_output</span><span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Results_output</span><span class="p">[</span><span class="s2">&quot;changes&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">Results_output</span><span class="p">[</span><span class="s2">&quot;baseline&quot;</span><span class="p">]</span>
+        <span class="n">Difference_output</span> <span class="o">=</span> <span class="n">Results_output</span><span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Store the Results_output in the dictionary with the sequence index as the key</span>
+        <span class="n">df_difference_output</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;intervention</span><span class="si">{</span><span class="n">seq_index</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Difference_output</span>
+        <span class="n">df_difference_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">df_difference_output</span><span class="p">)</span>
+
+        <span class="n">L_ct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">A_modify</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">x_ct</span> <span class="o">=</span> <span class="n">L_ct</span> <span class="o">@</span> <span class="n">Y_modify</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">RE_ct</span> <span class="o">=</span> <span class="n">indicatorintensity</span> <span class="o">*</span> <span class="n">x_ct</span>
+        <span class="n">F_diff_RE</span> <span class="o">=</span> <span class="p">(</span><span class="n">RE_ct</span> <span class="o">-</span> <span class="n">indicatorimpact</span><span class="p">)</span>
+        <span class="n">df_difference_impact</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;intervention</span><span class="si">{</span><span class="n">seq_index</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">F_diff_RE</span>
+        <span class="n">F_diff_RE</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">F_diff_RE</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">A_matrix</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">F_relative_change1</span> <span class="o">=</span> <span class="n">F_diff_RE</span><span class="o">/</span><span class="mi">1000</span>
+        
+
+        <span class="c1"># Filter the DataFrame to include only values above the threshold</span>
+        <span class="n">filtered_df</span> <span class="o">=</span> <span class="n">F_relative_change1</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">F_relative_change1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+        <span class="c1"># Calculate the sum of values below the threshold</span>
+        <span class="n">below_threshold_sum</span> <span class="o">=</span> <span class="n">F_relative_change1</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">F_relative_change1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">threshold</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="c1"># Add the below-threshold sum as a new row</span>
+        <span class="n">filtered_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="s1">&#39;Below Threshold&#39;</span><span class="p">,</span> <span class="s1">&#39;Sum of below threshold&#39;</span><span class="p">),</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">below_threshold_sum</span>
+
+        <span class="c1"># Choose a color palette (using Set1)</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;Set1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">colors</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">})</span>
+
+        <span class="c1"># Plot the filtered DataFrame with adjusted size and legend placement</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">filtered_df</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">stacked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Filtered differences for scenario </span><span class="si">{</span><span class="n">seq_index</span><span class="si">}</span><span class="se">\n</span><span class="s1"> in </span><span class="si">{</span><span class="n">indicator</span><span class="si">}</span><span class="s1"> (threshold = </span><span class="si">{</span><span class="n">threshold</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indicator</span><span class="si">}</span><span class="s2"> in kt&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Regions&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+        <span class="c1"># Show the plot</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">df_difference_output</span><span class="p">,</span> <span class="n">df_difference_impact</span></div>
+
+
+<span class="k">def</span> <span class="nf">insert_break_string</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a line break for labels when longer than threshold. usefull when the labels are too long in graphs </span>
+<span class="sd">    Possible line of code, modified_labels = [insert_break_string(label) for label in labels]</span>
+
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        text (Dataframe_like)</span>
+<span class="sd">            Dataframe containing results of the simulated data.</span>
+
+<span class="sd">        threshold (integer)</span>
+<span class="sd">            number of letters before break is applied </span>
+<span class="sd">        </span>
+
+<span class="sd">    Returns: List</span>
+<span class="sd">        A list containing all labels with line break </span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        IOError: An error occurred accessing the bigtable.Table object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">threshold</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">text</span>
+    <span class="n">space_index</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">space_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">text</span>  <span class="c1"># No space found after the 40th character, return as is.</span>
+    <span class="k">return</span> <span class="n">text</span><span class="p">[:</span><span class="n">space_index</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">space_index</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Reginold
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Reginold.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
