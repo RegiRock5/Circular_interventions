@@ -24,7 +24,7 @@ def apply_shocks(file_path, A_matrix, Y_matrix, sequencesA, sequencesY, indicato
 
     Parameters:
         File_path (string):
-            Dataframe containing results of Man-Kendall results (trend, p, intercept and slope)from mk function from  pymannkendall. 
+            String containing the path to the excel file which includes the shocks 
 
         A_matrix (Dataframe_like)
             Baseline A matrix.  
