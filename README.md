@@ -21,4 +21,4 @@ Both scenarios construction results are exported for visualisation in the last f
 - Function to perform adjustments to both A and Y matrix
 - [Circular function](cirk_func.py)
 
-Documentation regarding the function can be found here: [codedoc](api)
+Documentation regarding the function can be found here: [codedoc](api.html)
