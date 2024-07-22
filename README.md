@@ -27,9 +27,11 @@ Documentation regarding the function can be found here: [codedoc](api.html). The
 it contains the following variables that can be changed:
 - Path to excel file containing all shocks 
 - Requires both the baseline/base technical coeffiencient and final demand matrix
-- Requires Sequence of schocks included in each scenario.
+- Requires Sequence of schocks included in each scenario. (done by using list of index values)
 - Vector containing all environmental impact of interest
 - Vector containing the environmental sensitivity
 - Sensitivity input to modify the inputs in the shocks
 - Threshold (integer) and indicator (string) containing input parameters for visuals (graphs)
+
+Application of this function can be found in both [monetary tables](function_monetary.py) and [hybrid tables](function_hybrid.py)
  
