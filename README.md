@@ -2,6 +2,7 @@
 This study aimed to assess the global impact of circular interventions by integrating these interventions into the Exiobase database (both hybrid and monetary tables). The repository provides all scripts utilized in this study and just the function to implement the changes. This can be utilized in own studies regarding modelling interventions. However the scripts that are used to finilise the thesis are noted down below. Only use the following scripts as representative scripts for the thesis.
 
 Data utilized in the code can be downloaded from Zenodo using the following links.
+
 Monetary tables (MRIOT) 
 - https://zenodo.org/records/5589597
 - IOT_2011_ixi.zip
