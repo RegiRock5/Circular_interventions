@@ -44,3 +44,6 @@ it contains the following variables that can be changed:
 
 Application of this function can be found in both [monetary tables](function_monetary.py) and [hybrid tables](function_hybrid.py)
  
+
+### MARIO
+MARIO applied to {Monetary tables](InputCircularInterventions.py) 
