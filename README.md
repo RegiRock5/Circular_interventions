@@ -46,4 +46,4 @@ Application of this function can be found in both [monetary tables](function_mon
  
 
 ### MARIO
--MARIO applied to [Monetary tables](InputCircularInterventions.py) 
+-MARIO applied to [Monetary tables](InputCircularInterventions.py). CO2 calculations can be found [here](footprintcalc.py) 
